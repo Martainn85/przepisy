@@ -4,18 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Moje przepisy</title>
-<!--
-  ============================================================
-  WSPÓLNE KORZYSTANIE (Ty i żona) - KONFIGURACJA CHMURY
-  ============================================================
-  Aby przepisy i jadłospis były wspólne na różnych urządzeniach,
-  uzupełnij dwie wartości w sekcji CLOUD na dole tego pliku (w <script>):
-      url:  adres projektu Supabase (np. https://abcd1234.supabase.co)
-      key:  klucz "anon public" z ustawień projektu
-  Jak to zrobić, opisane jest w wiadomości obok.
-  Jeśli zostawisz puste, strona działa normalnie, ale tylko lokalnie.
-  ============================================================
--->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
@@ -37,7 +25,7 @@
   .count{font-family:"Fraunces",Georgia,serif;font-size:14px;color:var(--muted);white-space:nowrap}
   .count b{color:var(--accent);font-weight:600}
 
-  .tabs{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:12px;gap:4px}
+  .tabs{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:12px;gap:4px;flex-wrap:wrap}
   .tab{border:none;background:transparent;padding:8px 18px;border-radius:9px;font:inherit;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
   .tab.active{background:var(--surface);color:var(--accent);box-shadow:var(--shadow)}
 
@@ -69,7 +57,7 @@
   .pill{align-self:flex-start;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--herb);background:var(--herb-soft);padding:3px 9px;border-radius:999px}
   .card h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:20px;line-height:1.2}
   .card .desc{color:var(--muted);font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .card .meta{margin-top:auto;display:flex;gap:14px;color:var(--muted);font-size:12.5px;padding-top:6px}
+  .card .meta{margin-top:auto;display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--muted);font-size:12.5px;padding-top:6px}
 
   .empty{text-align:center;padding:60px 20px;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius);background:var(--surface)}
   .empty .big{font-family:"Fraunces",Georgia,serif;font-size:22px;color:var(--ink);margin-bottom:6px}
@@ -96,6 +84,23 @@
   .add-link{border:none;background:transparent;color:var(--accent);font:inherit;font-weight:600;font-size:13.5px;cursor:pointer;padding:4px 0;display:inline-flex;align-items:center;gap:5px}
   .add-link:hover{text-decoration:underline}
 
+  /* schemat */
+  .sch-head{background:var(--ink);color:#f3ede1;border-radius:var(--radius);padding:20px 22px;margin-bottom:18px}
+  .sch-head h2{font-family:"Fraunces",serif;font-size:24px;font-weight:600;margin-bottom:4px}
+  .sch-head .macros{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .sch-head .macros span{background:rgba(255,255,255,.12);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
+  .sch-head .macros span b{color:#e8b59c}
+  .sch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:18px}
+  .sch-part{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
+  .sch-part h4{font-family:"Fraunces",serif;font-size:17px;font-weight:600;display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
+  .sch-part h4 .kc{font-size:12.5px;color:var(--muted);font-family:"Hanken Grotesk",sans-serif;font-weight:600}
+  .sch-part ul{list-style:none;display:flex;flex-direction:column;gap:5px;font-size:14px}
+  .sch-part li{padding-left:16px;position:relative}
+  .sch-part li::before{content:"";position:absolute;left:3px;top:9px;width:5px;height:5px;border-radius:50%;background:var(--herb)}
+  .sch-note{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;font-size:14px;color:#5c5446}
+  .sch-note h4{font-family:"Fraunces",serif;font-size:16px;color:var(--ink);margin-bottom:8px}
+  .sch-note ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+
   .overlay{position:fixed;inset:0;background:rgba(40,32,22,.42);backdrop-filter:blur(2px);display:none;align-items:flex-start;justify-content:center;padding:28px 16px;overflow-y:auto;z-index:50}
   .overlay.open{display:flex}
   .modal{background:var(--surface);width:100%;max-width:680px;border-radius:18px;box-shadow:0 24px 60px rgba(40,32,22,.28);border:1px solid var(--line);animation:pop .2s ease both;margin:auto 0}
@@ -110,11 +115,17 @@
   .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink)}
   .field .hint{font-weight:400;color:var(--muted);font-size:12px}
   .field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;font:inherit;color:var(--ink);outline:none;resize:vertical;transition:border-color .15s,box-shadow .15s}
+  .field input:disabled{opacity:.55;cursor:not-allowed}
   .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:var(--surface)}
   .row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  .check{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px 14px;cursor:pointer}
+  .check input{width:auto;margin:0}
+  .check span{font-size:13.5px;font-weight:600}
+  .check small{display:block;font-weight:400;color:var(--muted);font-size:12px}
   .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
 
-  .detail .stat-row{display:flex;gap:22px;color:var(--muted);font-size:14px;margin:4px 0 18px;flex-wrap:wrap}
+  .detail .stat-row{display:flex;gap:8px 18px;color:var(--muted);font-size:14px;margin:4px 0 6px;flex-wrap:wrap}
+  .detail .macro-note{font-size:12px;color:var(--muted);margin-bottom:14px}
   .detail h3{font-family:"Fraunces",Georgia,serif;font-size:17px;font-weight:600;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
   .detail ul{list-style:none;display:flex;flex-direction:column;gap:6px}
   .detail ul li{padding-left:20px;position:relative}
@@ -141,7 +152,7 @@
   <header class="site">
     <div class="brand">
       <h1>Moje przepisy</h1>
-      <p>Wspólny zbiór dań i jadłospis</p>
+      <p>Wspólny zbiór dań, jadłospis i schemat</p>
     </div>
     <div class="count" id="count"></div>
   </header>
@@ -149,6 +160,7 @@
   <div class="tabs">
     <button class="tab active" id="tabRecipes">Przepisy</button>
     <button class="tab" id="tabPlan">Jadłospis</button>
+    <button class="tab" id="tabSchema">Schemat</button>
   </div>
   <div class="syncbar" id="syncbar"></div>
 
@@ -179,6 +191,89 @@
     <div id="slots"></div>
   </section>
 
+  <section id="viewSchema" class="hidden">
+    <div class="sch-head">
+      <h2>Schemat posiłku 525 kcal</h2>
+      <div>Program AM3, mężczyźni 80-95 kg. Dzienny zakres około 1925-2425 kcal (±10%).</div>
+      <div class="macros">
+        <span>Kalorie <b>≈ 525 kcal</b></span>
+        <span>Białko <b>45 g</b></span>
+        <span>Węglowodany <b>55 g</b></span>
+        <span>w tym błonnik <b>10 g</b></span>
+        <span>Tłuszcz <b>18 g</b></span>
+      </div>
+    </div>
+
+    <p style="color:var(--muted);font-size:14px;margin-bottom:14px">Posiłek 525 kcal składasz z czterech wymiennych części. W każdej kolumnie wybierasz jedną pozycję, a podane gramatury dają zbliżoną wartość, dzięki czemu makra wychodzą takie same niezależnie od wyboru.</p>
+
+    <div class="sch-grid">
+      <div class="sch-part">
+        <h4>Część białkowa <span class="kc">≈ 200 kcal</span></h4>
+        <ul>
+          <li>210 g filetu z indyka lub kurczaka</li>
+          <li>200 g chudego mięsa do 4% tł. (wołowe, cielęce, wieprzowe)</li>
+          <li>270 g białej ryby (masa po rozmrożeniu)</li>
+          <li>200 g łososia dzikiego</li>
+          <li>200 g chudego twarogu</li>
+          <li>300 g jogurtu naturalnego lub skyr</li>
+          <li>2 jaja całe rozmiar L + 5 białek (lub 3 całe jaja L)</li>
+          <li>50 g odżywki wysokobiałkowej (ok. 80% białka)</li>
+        </ul>
+      </div>
+      <div class="sch-part">
+        <h4>Część węglowodanowa <span class="kc">≈ 170 kcal</span></h4>
+        <ul>
+          <li>50 g dowolnej kaszy</li>
+          <li>50 g dowolnego ryżu</li>
+          <li>50 g dowolnego makaronu</li>
+          <li>45 g płatków owsianych</li>
+          <li>50 g płatków jaglanych, ryżowych lub orkiszowych</li>
+          <li>200 g dowolnych ziemniaków</li>
+          <li>60 g dowolnego pieczywa</li>
+          <li>50 g wafli ryżowych</li>
+          <li>50 g mąki z dowolnego zboża</li>
+        </ul>
+      </div>
+      <div class="sch-part">
+        <h4>Część tłuszczowa <span class="kc">≈ 90 kcal</span></h4>
+        <ul>
+          <li>10 g (łyżka) oleju lnianego na zimno</li>
+          <li>10 g oleju słonecznikowego lub z wiesiołka, tłoczonego na zimno</li>
+          <li>10 g oliwy z oliwek extra virgin</li>
+          <li>15 g masła</li>
+          <li>15 g majonezu</li>
+          <li>50 g śmietany 18%</li>
+          <li>30 g sera żółtego pełnotłustego</li>
+          <li>15 g orzechów</li>
+          <li>15 g pestek dyni lub słonecznika</li>
+          <li>60 g awokado</li>
+          <li>45 g mleczka kokosowego</li>
+        </ul>
+      </div>
+      <div class="sch-part">
+        <h4>Część błonnikowa <span class="kc">≈ 65 kcal</span></h4>
+        <ul>
+          <li>300 g dowolnych warzyw lub grzybów (poza kukurydzą, ziemniakami i strączkami)</li>
+          <li>200 g niskokalorycznych owoców (truskawki, maliny, poziomki, porzeczki, arbuz, melon, grejpfrut)</li>
+          <li>150 g pozostałych owoców (poza awokado i bananami)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sch-note">
+      <h4>Zasady przygotowania (skrót)</h4>
+      <ul>
+        <li>Gramatury dotyczą wagi produktu przed obróbką termiczną.</li>
+        <li>Mięso i ryby gotuj, piecz, grilluj, duś lub smaż na wodzie albo odrobinie oleju kokosowego lub kropli oliwy.</li>
+        <li>Oleje dodawaj najlepiej na surowo do gotowej potrawy, bo podgrzewanie tłuszczów bogatych w NNKT pogarsza ich jakość.</li>
+        <li>Wybieraj produkty mało przetworzone i pełnoziarniste, sezonowe i krajowe.</li>
+        <li>Przyprawy świeże i suszone oraz sól według uznania.</li>
+        <li>Post 12-14 godzin na dobę, w jego trakcie tylko woda, herbata lub kawa bez cukru i mleka. Ostatni posiłek nie później niż około 2 godziny przed snem.</li>
+        <li>Aktywność: 6-8 tys. kroków lub 45-60 min spaceru, ewentualnie dowolny trening.</li>
+      </ul>
+    </div>
+  </section>
+
   <div class="footer">Bez podłączonej chmury dane zapisują się tylko w tej przeglądarce. Eksport robi kopię zapasową całości.</div>
 </div>
 
@@ -197,13 +292,16 @@
   "use strict";
 
   /* ============================================================
-     KONFIGURACJA WSPÓLNEJ CHMURY (uzupełnij, by dzielić bazę)
+     KONFIGURACJA WSPÓLNEJ CHMURY
      ============================================================ */
   var CLOUD = {
-    url: "https://zxuzpvujmwzroxvysabl.supabase.co",   // np. "https://abcd1234.supabase.co"
-    key: "sb_publishable_jSaWrG6PiFAK8JoFyTTw-g_6lerupxG"    // klucz "anon public" z Supabase
+    url: "https://zxuzpvujmwzroxvysabl.supabase.co",
+    key: "sb_publishable_jSaWrG6PiFAK8JoFyTTw-g_6lerupxG"
   };
   /* ============================================================ */
+
+  /* Stałe schematu 525 kcal */
+  var SCHEME={kcal:525,protein:45,carbs:55,fiber:10,fat:18};
 
   var RKEY="moje_przepisy_v1", PKEY="moje_jadlospis_v1";
   var CATS=["Śniadanie","Obiad","Kolacja","Przekąska","Deser","Napój","Inne"];
@@ -232,6 +330,8 @@
   function recWord(n){return n===1?"przepis":(n%10>=2&&n%10<=4&&(n<10||n>20)?"przepisy":"przepisów");}
   function recById(id){return recipes.find(function(r){return r.id===id;});}
   function kcalNum(r){var n=parseInt((r&&r.kcal||"").replace(/\D/g,""),10);return isNaN(n)?0:n;}
+  function isScheme(r){return r && r.scheme!==false;}
+  function mealKcal(r){return isScheme(r)?SCHEME.kcal:kcalNum(r);}
 
   /* ---------- CHMURA (Supabase REST) ---------- */
   function baseUrl(){return CLOUD.url.replace(/\/$/,"");}
@@ -276,7 +376,6 @@
       .catch(function(){setSync("error");});
   }
 
-  /* ---------- ZAPIS ---------- */
   function saveR(){persist(RKEY,recipes);pushCloud();}
   function saveP(){persist(PKEY,plans);pushCloud();}
 
@@ -299,13 +398,13 @@
     }
     filtered.forEach(function(r,i){
       var card=document.createElement("div");card.className="card";card.style.animationDelay=(i*0.03)+"s";
-      var meta="";
-      if(r.kcal) meta+='<span>🔥 '+esc(r.kcal)+' kcal</span>';
+      var meta='<span>🔥 '+mealKcal(r)+' kcal</span>';
+      if(isScheme(r)) meta+='<span>B '+SCHEME.protein+' · W '+SCHEME.carbs+' · T '+SCHEME.fat+'</span>';
       if(r.servings) meta+='<span>🍽 '+esc(r.servings)+'</span>';
       card.innerHTML=(r.category?'<span class="pill">'+esc(r.category)+'</span>':'')+
         '<h3>'+esc(r.title)+'</h3>'+
         (r.description?'<div class="desc">'+esc(r.description)+'</div>':'')+
-        (meta?'<div class="meta">'+meta+'</div>':'');
+        '<div class="meta">'+meta+'</div>';
       card.addEventListener("click",function(){viewRecipe(r.id);});
       listEl.appendChild(card);
     });
@@ -314,14 +413,17 @@
   function viewRecipe(id){
     var r=recById(id);if(!r)return;
     modalTitle.textContent="Przepis";
-    var ing=lines(r.ingredients), steps=lines(r.steps), stat="";
+    var ing=lines(r.ingredients), steps=lines(r.steps);
+    var stat='';
     if(r.servings) stat+='<span>🍽 '+esc(r.servings)+'</span>';
-    if(r.kcal) stat+='<span>🔥 '+esc(r.kcal)+' kcal</span>';
+    stat+='<span>🔥 '+mealKcal(r)+' kcal</span>';
+    if(isScheme(r)) stat+='<span>Białko '+SCHEME.protein+' g</span><span>Węgl. '+SCHEME.carbs+' g (błonnik '+SCHEME.fiber+' g)</span><span>Tłuszcz '+SCHEME.fat+' g</span>';
     var html='<div class="detail">'+
       (r.category?'<span class="pill">'+esc(r.category)+'</span>':'')+
       '<div style="font-family:Fraunces,serif;font-size:28px;font-weight:600;line-height:1.1;margin:6px 0">'+esc(r.title)+'</div>'+
       (r.description?'<div style="color:var(--muted)">'+esc(r.description)+'</div>':'')+
-      (stat?'<div class="stat-row">'+stat+'</div>':'<div style="height:10px"></div>');
+      '<div class="stat-row">'+stat+'</div>'+
+      (isScheme(r)?'<div class="macro-note">Makra wg schematu posiłku 525 kcal (±10%).</div>':'');
     if(ing.length) html+='<h3>Składniki</h3><ul>'+ing.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>';
     if(steps.length) html+='<h3>Przygotowanie</h3><ol>'+steps.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ol>';
     if(r.notes) html+='<div class="notes"><strong>Notatki:</strong> '+esc(r.notes)+'</div>';
@@ -338,27 +440,33 @@
 
   function openForm(r){
     var edit=!!r;r=r||{};
+    var sch = r.id ? isScheme(r) : true;
     modalTitle.textContent=edit?"Edytuj przepis":"Nowy przepis";
     var opts=CATS.map(function(c){return '<option value="'+c+'"'+(r.category===c?' selected':'')+'>'+c+'</option>';}).join("");
     modalBody.innerHTML=
       '<div class="field"><label>Nazwa dania</label><input id="f_title" type="text" placeholder="np. Gulasz drobiowy" value="'+esc(r.title)+'"></div>'+
+      '<div class="field"><label class="check"><input id="f_scheme" type="checkbox"'+(sch?' checked':'')+'><span>Posiłek wg schematu 525 kcal<small>białko 45 g · węgl. 55 g (błonnik 10 g) · tłuszcz 18 g</small></span></label></div>'+
       '<div class="row2">'+
         '<div class="field"><label>Kategoria</label><select id="f_cat"><option value="">(brak)</option>'+opts+'</select></div>'+
-        '<div class="field"><label>Porcje</label><input id="f_serv" type="text" placeholder="np. 4" value="'+esc(r.servings)+'"></div>'+
-        '<div class="field"><label>Kcal / porcja</label><input id="f_kcal" type="text" placeholder="np. 350" value="'+esc(r.kcal)+'"></div>'+
+        '<div class="field"><label>Porcje</label><input id="f_serv" type="text" placeholder="np. 1" value="'+esc(r.servings)+'"></div>'+
+        '<div class="field"><label>Kcal / porcja <span class="hint">(gdy bez schematu)</span></label><input id="f_kcal" type="text" placeholder="np. 350" value="'+esc(r.kcal)+'"></div>'+
       '</div>'+
       '<div class="field"><label>Krótki opis <span class="hint">(opcjonalnie)</span></label><input id="f_desc" type="text" placeholder="jedno zdanie" value="'+esc(r.description)+'"></div>'+
-      '<div class="field"><label>Składniki <span class="hint">(każdy w nowej linii)</span></label><textarea id="f_ing" rows="6" placeholder="300 g ziemniaków&#10;1 jajko&#10;sól, pieprz">'+esc(r.ingredients)+'</textarea></div>'+
+      '<div class="field"><label>Składniki <span class="hint">(każdy w nowej linii)</span></label><textarea id="f_ing" rows="6" placeholder="200 g ziemniaków&#10;210 g filetu z kurczaka&#10;sól, pieprz">'+esc(r.ingredients)+'</textarea></div>'+
       '<div class="field"><label>Sposób przygotowania <span class="hint">(każdy krok w nowej linii)</span></label><textarea id="f_steps" rows="7" placeholder="Ziemniaki ugotuj...&#10;Dodaj jajko...">'+esc(r.steps)+'</textarea></div>'+
-      '<div class="field"><label>Notatki <span class="hint">(opcjonalnie)</span></label><input id="f_notes" type="text" placeholder="np. wariant 525 kcal: ..." value="'+esc(r.notes)+'"></div>'+
+      '<div class="field"><label>Notatki <span class="hint">(opcjonalnie)</span></label><input id="f_notes" type="text" placeholder="np. uwagi do dania" value="'+esc(r.notes)+'"></div>'+
       '<div class="form-actions"><button class="btn btn-ghost" id="cancelBtn">Anuluj</button><button class="btn btn-primary" id="saveBtn">'+(edit?"Zapisz zmiany":"Dodaj przepis")+'</button></div>';
     openModal();el("f_title").focus();
+    var schemeBox=el("f_scheme"), kcalInput=el("f_kcal");
+    function syncKcal(){ if(schemeBox.checked){kcalInput.value="525";kcalInput.disabled=true;} else {kcalInput.disabled=false; if(kcalInput.value==="525")kcalInput.value="";} }
+    schemeBox.addEventListener("change",syncKcal);syncKcal();
     el("cancelBtn").addEventListener("click",function(){ edit?viewRecipe(r.id):closeModal(); });
     el("saveBtn").addEventListener("click",function(){
       var title=el("f_title").value.trim();
       if(!title){alert("Podaj nazwę dania.");return;}
+      var scheme=schemeBox.checked;
       var data={id:r.id||uid(),title:title,category:el("f_cat").value,servings:el("f_serv").value.trim(),
-        kcal:el("f_kcal").value.trim(),description:el("f_desc").value.trim(),
+        kcal:scheme?"525":kcalInput.value.trim(),scheme:scheme,description:el("f_desc").value.trim(),
         ingredients:el("f_ing").value,steps:el("f_steps").value,notes:el("f_notes").value.trim()};
       if(r.id){recipes=recipes.map(function(x){return x.id===r.id?data:x;});}else{recipes.unshift(data);}
       saveR();renderRecipes();renderPlan();viewRecipe(data.id);
@@ -371,24 +479,35 @@
   function setDay(str){currentDate=str;dayInput.value=str;renderPlan();}
   function shiftDay(delta){var p=currentDate.split("-");var d=new Date(+p[0],+p[1]-1,+p[2]);d.setDate(d.getDate()+delta);setDay(ymd(d));}
 
+  function totals(items){
+    var t={kcal:0,sch:0};
+    items.forEach(function(it){var r=recById(it.id);if(!r)return;t.kcal+=mealKcal(r);if(isScheme(r))t.sch++;});
+    t.protein=t.sch*SCHEME.protein;t.carbs=t.sch*SCHEME.carbs;t.fiber=t.sch*SCHEME.fiber;t.fat=t.sch*SCHEME.fat;
+    return t;
+  }
+
   function renderPlan(){
     dayInput.value=currentDate;
     var p=currentDate.split("-");var d=new Date(+p[0],+p[1]-1,+p[2]);
     dayLabel.textContent=d.toLocaleDateString("pl-PL",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
     var day=plans[currentDate]||[];
-    var total=day.reduce(function(s,it){var r=recById(it.id);return s+(r?kcalNum(r):0);},0);
-    daySum.innerHTML = day.length ? ('Zaplanowane dania: '+day.length+'. Suma kcal (przy 1 porcji każdego): <b>'+total+' kcal</b>') : 'Brak zaplanowanych dań na ten dzień.';
+    var t=totals(day);
+    if(day.length){
+      var macro = t.sch ? (' · B <b>'+t.protein+' g</b> · W <b>'+t.carbs+' g</b> (błonnik '+t.fiber+' g) · T <b>'+t.fat+' g</b>') : '';
+      daySum.innerHTML='Posiłki: '+day.length+' · ok. <b>'+t.kcal+' kcal</b>'+macro+(t.sch?' <span style="font-size:12px">(wg schematu, ±10%)</span>':'');
+    } else { daySum.innerHTML='Brak zaplanowanych dań na ten dzień.'; }
+
     slotsEl.innerHTML="";
     MEALS.forEach(function(meal){
       var items=day.filter(function(it){return it.meal===meal;});
-      var skcal=items.reduce(function(s,it){var r=recById(it.id);return s+(r?kcalNum(r):0);},0);
+      var st=totals(items);
       var box=document.createElement("div");box.className="slot";
-      var inner='<div class="slot-head"><h4>'+meal+'</h4>'+(skcal?'<span class="skcal">'+skcal+' kcal</span>':'')+'</div><div class="slot-items">';
+      var inner='<div class="slot-head"><h4>'+meal+'</h4>'+(items.length?'<span class="skcal">'+st.kcal+' kcal</span>':'')+'</div><div class="slot-items">';
       if(items.length===0){inner+='<div class="slot-empty">Nic nie zaplanowano</div>';}
       else{items.forEach(function(it){
         var r=recById(it.id);
         if(!r){inner+='<div class="pitem"><span class="pname" style="color:var(--muted);font-style:italic">(przepis usunięty)</span><button class="rm" data-rm="'+it._k+'">&times;</button></div>';}
-        else{inner+='<div class="pitem"><span class="pname" data-open="'+r.id+'">'+esc(r.title)+'</span>'+(r.kcal?'<span class="pk">'+esc(r.kcal)+' kcal</span>':'')+'<button class="rm" data-rm="'+it._k+'">&times;</button></div>';}
+        else{inner+='<div class="pitem"><span class="pname" data-open="'+r.id+'">'+esc(r.title)+'</span><span class="pk">'+mealKcal(r)+' kcal</span><button class="rm" data-rm="'+it._k+'">&times;</button></div>';}
       });}
       inner+='</div><button class="add-link" data-add="'+meal+'">+ dodaj danie</button>';
       box.innerHTML=inner;slotsEl.appendChild(box);
@@ -426,7 +545,7 @@
       if(arr.length===0){listBox.innerHTML='<div class="slot-empty">Brak pasujących przepisów</div>';return;}
       arr.forEach(function(r){
         var row=document.createElement("div");row.className="pick-row";
-        row.innerHTML='<div><div class="pt">'+esc(r.title)+'</div><div class="pm">'+(r.category?esc(r.category):"")+(r.kcal?(r.category?" · ":"")+esc(r.kcal)+" kcal":"")+'</div></div><span style="color:var(--accent);font-weight:700">+</span>';
+        row.innerHTML='<div><div class="pt">'+esc(r.title)+'</div><div class="pm">'+(r.category?esc(r.category):"")+(r.category?" · ":"")+mealKcal(r)+' kcal</div></div><span style="color:var(--accent);font-weight:700">+</span>';
         row.addEventListener("click",function(){addToPlan(meal,r.id);closeModal();});
         listBox.appendChild(row);
       });
@@ -443,15 +562,17 @@
 
   /* ---------- zakładki ---------- */
   function switchView(name){
-    var rec=name==="recipes";
-    el("viewRecipes").classList.toggle("hidden",!rec);
-    el("viewPlan").classList.toggle("hidden",rec);
-    el("tabRecipes").classList.toggle("active",rec);
-    el("tabPlan").classList.toggle("active",!rec);
-    if(!rec)renderPlan();
+    el("viewRecipes").classList.toggle("hidden",name!=="recipes");
+    el("viewPlan").classList.toggle("hidden",name!=="plan");
+    el("viewSchema").classList.toggle("hidden",name!=="schema");
+    el("tabRecipes").classList.toggle("active",name==="recipes");
+    el("tabPlan").classList.toggle("active",name==="plan");
+    el("tabSchema").classList.toggle("active",name==="schema");
+    if(name==="plan")renderPlan();
   }
   el("tabRecipes").addEventListener("click",function(){switchView("recipes");});
   el("tabPlan").addEventListener("click",function(){switchView("plan");});
+  el("tabSchema").addEventListener("click",function(){switchView("schema");});
 
   /* ---------- toolbar ---------- */
   el("addBtn").addEventListener("click",function(){openForm(null);});
