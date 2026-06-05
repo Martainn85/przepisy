@@ -3,653 +3,828 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Moje przepisy</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Fit Przepisy | Śniadania i Obiady</title>
 <style>
-  :root{
-    --bg:#f3ede1; --surface:#fbf8f1; --surface-2:#f7f1e6;
-    --ink:#2a2620; --muted:#8c8273; --accent:#bf441d; --accent-soft:#f6e2d8;
-    --herb:#6b7d3a; --herb-soft:#eef0e3; --line:#e4dccb;
-    --shadow:0 1px 2px rgba(60,48,30,.06),0 8px 24px rgba(60,48,30,.08);
-    --radius:14px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:"Hanken Grotesk",ui-sans-serif,system-ui,sans-serif;background:radial-gradient(1200px 600px at 80% -10%, #f8efe0 0%, transparent 60%),var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
-  .wrap{max-width:920px;margin:0 auto;padding:32px 20px 80px}
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500&family=Karla:wght@400;500;700&display=swap');
 
-  header.site{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:18px}
-  .brand h1{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(28px,5vw,40px);letter-spacing:-.01em;line-height:1.05}
-  .brand p{color:var(--muted);font-size:14px;margin-top:4px}
-  .count{font-family:"Fraunces",Georgia,serif;font-size:14px;color:var(--muted);white-space:nowrap}
-  .count b{color:var(--accent);font-weight:600}
+:root{
+  --bg:#f6efe4;
+  --card:#fffdf8;
+  --ink:#2b211c;
+  --muted:#8a7a6d;
+  --berry:#8c2f4a;
+  --berry-soft:#b9456a;
+  --leaf:#5a7a4f;
+  --line:#e3d8c7;
+  --shadow:0 1px 2px rgba(43,33,28,.04),0 8px 28px rgba(43,33,28,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Karla',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(rgba(140,47,74,.04) 1px,transparent 1px);
+  background-size:22px 22px;
+}
 
-  .tabs{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:12px;gap:4px;flex-wrap:wrap}
-  .tab{border:none;background:transparent;padding:8px 18px;border-radius:9px;font:inherit;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s}
-  .tab.active{background:var(--surface);color:var(--accent);box-shadow:var(--shadow)}
+/* HEADER */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(246,239,228,.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.head-inner{max-width:1100px;margin:0 auto;padding:18px 22px 0}
+.brand{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.brand h1{
+  font-family:'Fraunces',serif;font-weight:900;font-size:clamp(28px,5vw,46px);
+  color:var(--berry);letter-spacing:-.01em;line-height:.95;font-style:italic;
+}
+.brand span{font-size:13px;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;font-weight:700}
 
-  .syncbar{font-size:12.5px;color:var(--muted);margin:0 0 20px;display:flex;align-items:center;gap:8px}
-  .syncbar .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
-  .syncbar.ok .dot{background:var(--herb)}
-  .syncbar.err .dot{background:var(--accent)}
-  .syncbar button{border:none;background:transparent;color:var(--accent);font:inherit;font-weight:600;cursor:pointer;padding:0;font-size:12.5px}
-  .syncbar button:hover{text-decoration:underline}
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:16px 0 14px}
+.search{
+  flex:1;min-width:200px;position:relative;
+}
+.search input{
+  width:100%;padding:11px 14px 11px 40px;border:1px solid var(--line);
+  border-radius:40px;background:var(--card);font-family:inherit;font-size:15px;color:var(--ink);
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.search input:focus{border-color:var(--berry-soft);box-shadow:0 0 0 3px rgba(185,69,106,.12)}
+.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.count{font-size:13px;color:var(--muted);white-space:nowrap;font-weight:500}
 
-  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:22px}
-  .search{flex:1 1 220px;min-width:180px;position:relative}
-  .search input{width:100%;padding:11px 14px 11px 38px;border:1px solid var(--line);background:var(--surface);border-radius:10px;font:inherit;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s}
-  .search input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-  .search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
-  select.filter{padding:11px 12px;border:1px solid var(--line);background:var(--surface);border-radius:10px;font:inherit;color:var(--ink);cursor:pointer;outline:none}
-  .btn{border:1px solid transparent;border-radius:10px;padding:11px 16px;font:inherit;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:transform .08s,background .15s,border-color .15s}
-  .btn:active{transform:translateY(1px)}
-  .btn-primary{background:var(--accent);color:#fff}
-  .btn-primary:hover{background:#a73a17}
-  .btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
-  .btn-ghost:hover{background:var(--surface-2)}
-  .btn-sm{padding:8px 12px;font-size:13px}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:14px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  border:1px solid var(--line);background:var(--card);color:var(--muted);
+  padding:7px 15px;border-radius:30px;font-family:inherit;font-size:13.5px;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:all .18s;
+}
+.tab:hover{color:var(--ink);border-color:var(--berry-soft)}
+.tab.active{background:var(--berry);color:#fff;border-color:var(--berry)}
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;cursor:pointer;box-shadow:var(--shadow);transition:transform .12s,box-shadow .12s;display:flex;flex-direction:column;gap:8px;animation:rise .35s ease both}
-  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  .card:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(60,48,30,.08),0 16px 32px rgba(60,48,30,.12)}
-  .pill{align-self:flex-start;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--herb);background:var(--herb-soft);padding:3px 9px;border-radius:999px}
-  .card h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:20px;line-height:1.2}
-  .card .desc{color:var(--muted);font-size:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .card .meta{margin-top:auto;display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--muted);font-size:12.5px;padding-top:6px}
+/* GRID */
+main{max-width:1100px;margin:0 auto;padding:26px 22px 80px;position:relative;z-index:1}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;
+  cursor:pointer;box-shadow:var(--shadow);transition:transform .18s,box-shadow .18s,border-color .18s;
+  display:flex;flex-direction:column;gap:12px;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 34px rgba(43,33,28,.1);border-color:var(--berry-soft)}
+.card .cat{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--berry-soft);font-weight:700}
+.card h3{font-family:'Fraunces',serif;font-size:21px;font-weight:600;line-height:1.15;color:var(--ink)}
+.card .meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:auto;font-size:12.5px;color:var(--muted)}
+.kcal{font-weight:700;color:var(--berry);font-size:15px;font-family:'Fraunces',serif}
+.time{display:inline-flex;align-items:center;gap:4px}
+.macros{display:flex;gap:6px;flex-wrap:wrap}
+.macro{font-size:11px;background:var(--bg);border:1px solid var(--line);padding:2px 8px;border-radius:20px;font-weight:700;color:var(--muted)}
+.macro b{color:var(--ink)}
 
-  .empty{text-align:center;padding:60px 20px;color:var(--muted);border:1px dashed var(--line);border-radius:var(--radius);background:var(--surface)}
-  .empty .big{font-family:"Fraunces",Georgia,serif;font-size:22px;color:var(--ink);margin-bottom:6px}
+.empty{text-align:center;color:var(--muted);padding:60px 20px;font-size:17px}
 
-  .day-nav{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
-  .day-nav .arrow{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:18px;color:var(--ink)}
-  .day-nav .arrow:hover{background:var(--surface-2)}
-  .day-nav input[type=date]{padding:10px 12px;border:1px solid var(--line);background:var(--surface);border-radius:10px;font:inherit;color:var(--ink)}
-  .day-label{font-family:"Fraunces",Georgia,serif;font-size:22px;font-weight:600;margin:6px 0 4px;text-transform:capitalize}
-  .day-sum{color:var(--muted);font-size:14px;margin-bottom:20px}
-  .day-sum b{color:var(--accent);font-family:"Fraunces",serif}
-  .slot{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow)}
-  .slot-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-  .slot-head h4{font-family:"Fraunces",Georgia,serif;font-size:17px;font-weight:600}
-  .slot-head .skcal{color:var(--muted);font-size:13px}
-  .slot-items{display:flex;flex-direction:column;gap:8px}
-  .pitem{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:9px 12px}
-  .pitem .pname{flex:1;cursor:pointer;font-weight:500}
-  .pitem .pname:hover{color:var(--accent)}
-  .pitem .pk{color:var(--muted);font-size:12.5px;white-space:nowrap}
-  .pitem .rm{border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:17px;line-height:1;padding:2px 4px}
-  .pitem .rm:hover{color:var(--accent)}
-  .slot-empty{color:var(--muted);font-size:13.5px;font-style:italic;padding:4px 0 8px}
-  .add-link{border:none;background:transparent;color:var(--accent);font:inherit;font-weight:600;font-size:13.5px;cursor:pointer;padding:4px 0;display:inline-flex;align-items:center;gap:5px}
-  .add-link:hover{text-decoration:underline}
+/* MODAL */
+.overlay{
+  position:fixed;inset:0;z-index:100;background:rgba(43,33,28,.55);
+  backdrop-filter:blur(4px);display:none;align-items:flex-start;justify-content:center;
+  padding:20px;overflow-y:auto;
+}
+.overlay.open{display:flex}
+.modal{
+  background:var(--card);max-width:680px;width:100%;border-radius:20px;
+  margin:auto;box-shadow:0 30px 80px rgba(43,33,28,.35);overflow:hidden;
+  animation:pop .25s ease;
+}
+@keyframes pop{from{transform:translateY(14px) scale(.98);opacity:0}to{transform:none;opacity:1}}
+.modal-head{
+  padding:28px 30px 22px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(140,47,74,.05),transparent);position:relative;
+}
+.modal-head .cat{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--berry-soft);font-weight:700}
+.modal-head h2{font-family:'Fraunces',serif;font-style:italic;font-weight:900;font-size:clamp(26px,4vw,36px);color:var(--berry);line-height:1.05;margin:6px 0 14px}
+.modal-head .sub{font-size:14px;color:var(--muted)}
+.close{
+  position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;
+  border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:20px;color:var(--muted);
+  display:grid;place-items:center;transition:all .18s;line-height:1;
+}
+.close:hover{background:var(--berry);color:#fff;border-color:var(--berry);transform:rotate(90deg)}
 
-  /* schemat */
-  .sch-head{background:var(--ink);color:#f3ede1;border-radius:var(--radius);padding:20px 22px;margin-bottom:18px}
-  .sch-head h2{font-family:"Fraunces",serif;font-size:24px;font-weight:600;margin-bottom:4px}
-  .sch-head .macros{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-  .sch-head .macros span{background:rgba(255,255,255,.12);border-radius:999px;padding:5px 12px;font-size:13px;font-weight:600}
-  .sch-head .macros span b{color:#e8b59c}
-  .sch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:18px}
-  .sch-part{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)}
-  .sch-part h4{font-family:"Fraunces",serif;font-size:17px;font-weight:600;display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px}
-  .sch-part h4 .kc{font-size:12.5px;color:var(--muted);font-family:"Hanken Grotesk",sans-serif;font-weight:600}
-  .sch-part ul{list-style:none;display:flex;flex-direction:column;gap:5px;font-size:14px}
-  .sch-part li{padding-left:16px;position:relative}
-  .sch-part li::before{content:"";position:absolute;left:3px;top:9px;width:5px;height:5px;border-radius:50%;background:var(--herb)}
-  .sch-note{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;font-size:14px;color:#5c5446}
-  .sch-note h4{font-family:"Fraunces",serif;font-size:16px;color:var(--ink);margin-bottom:8px}
-  .sch-note ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
-  .sch-h3{font-family:"Fraunces",serif;font-size:18px;font-weight:600;margin:6px 0 12px}
-  .sch-plan{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow)}
-  .sch-plan table{width:100%;border-collapse:collapse;font-size:14px}
-  .sch-plan td{padding:11px 16px;border-bottom:1px solid var(--line)}
-  .sch-plan tr:last-child td{border-bottom:none}
-  .sch-plan td.t{font-weight:600;white-space:nowrap;width:128px;color:var(--ink)}
-  .sch-plan td:last-child{color:#5c5446}
-  .sch-exc{background:var(--accent-soft);border:1px solid #ecc7b6;border-radius:var(--radius);padding:14px 18px;font-size:14px;color:#7a3417;margin-bottom:18px}
-  .sch-exc ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
-  .sch-exc p{font-size:12.5px;color:#9a6b54;margin-top:8px}
+.modal-body{padding:24px 30px 32px;max-height:62vh;overflow-y:auto}
+.modal-body h4{
+  font-family:'Fraunces',serif;font-weight:600;font-size:19px;margin:22px 0 10px;color:var(--ink);
+  display:flex;align-items:center;gap:9px;
+}
+.modal-body h4:first-child{margin-top:0}
+.modal-body h4::before{content:"";width:18px;height:2px;background:var(--berry-soft);border-radius:2px}
+.modal-body ul{list-style:none;display:flex;flex-direction:column;gap:7px}
+.modal-body ul li{padding-left:20px;position:relative;font-size:14.5px}
+.modal-body ul li::before{content:"";position:absolute;left:4px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--leaf)}
+.modal-body ol{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:12px}
+.modal-body ol li{counter-increment:step;padding-left:38px;position:relative;font-size:14.5px}
+.modal-body ol li::before{
+  content:counter(step);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:50%;
+  background:var(--berry);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;font-family:'Fraunces',serif;
+}
+.note{font-size:13.5px;color:var(--muted);font-style:italic;margin-top:8px}
 
-  .overlay{position:fixed;inset:0;background:rgba(40,32,22,.42);backdrop-filter:blur(2px);display:none;align-items:flex-start;justify-content:center;padding:28px 16px;overflow-y:auto;z-index:50}
-  .overlay.open{display:flex}
-  .modal{background:var(--surface);width:100%;max-width:680px;border-radius:18px;box-shadow:0 24px 60px rgba(40,32,22,.28);border:1px solid var(--line);animation:pop .2s ease both;margin:auto 0}
-  @keyframes pop{from{opacity:0;transform:scale(.98) translateY(6px)}to{opacity:1;transform:none}}
-  .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);border-radius:18px 18px 0 0;z-index:1}
-  .modal-head h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:24px;line-height:1.15}
-  .close{border:none;background:var(--surface-2);width:34px;height:34px;border-radius:9px;cursor:pointer;font-size:18px;color:var(--ink);flex:none}
-  .close:hover{background:var(--accent-soft);color:var(--accent)}
-  .modal-body{padding:22px 24px 26px}
+.nutri{margin-top:24px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.nutri table{width:100%;border-collapse:collapse;font-size:14px}
+.nutri th,.nutri td{padding:9px 12px;text-align:center;border-bottom:1px solid var(--line)}
+.nutri thead th{background:var(--bg);font-family:'Karla';font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.nutri tbody tr:last-child td{border-bottom:none}
+.nutri td:first-child{text-align:left;font-weight:700;color:var(--ink)}
+.nutri td.kc{color:var(--berry);font-weight:700;font-family:'Fraunces',serif}
 
-  .field{margin-bottom:16px}
-  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink)}
-  .field .hint{font-weight:400;color:var(--muted);font-size:12px}
-  .field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;font:inherit;color:var(--ink);outline:none;resize:vertical;transition:border-color .15s,box-shadow .15s}
-  .field input:disabled{opacity:.55;cursor:not-allowed}
-  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:var(--surface)}
-  .row2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-  .check{display:flex;align-items:center;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:11px 14px;cursor:pointer}
-  .check input{width:auto;margin:0}
-  .check span{font-size:13.5px;font-weight:600}
-  .check small{display:block;font-weight:400;color:var(--muted);font-size:12px}
-  .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+footer{text-align:center;padding:30px 20px 50px;color:var(--muted);font-size:13px;position:relative;z-index:1}
+footer a{color:var(--berry);text-decoration:none;font-weight:700}
 
-  .detail .stat-row{display:flex;gap:8px 18px;color:var(--muted);font-size:14px;margin:4px 0 6px;flex-wrap:wrap}
-  .detail .macro-note{font-size:12px;color:var(--muted);margin-bottom:14px}
-  .detail h3{font-family:"Fraunces",Georgia,serif;font-size:17px;font-weight:600;margin:20px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
-  .detail ul{list-style:none;display:flex;flex-direction:column;gap:6px}
-  .detail ul li{padding-left:20px;position:relative}
-  .detail ul li::before{content:"";position:absolute;left:4px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
-  .detail ol{counter-reset:step;list-style:none;display:flex;flex-direction:column;gap:12px}
-  .detail ol li{counter-increment:step;padding-left:38px;position:relative}
-  .detail ol li::before{content:counter(step);position:absolute;left:0;top:-1px;width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;font-family:"Fraunces",serif}
-  .detail .notes{margin-top:18px;padding:14px 16px;background:var(--surface-2);border-radius:10px;font-size:14px;color:#5c5446}
-  .detail-actions{display:flex;gap:10px;margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
-
-  .pick-list{display:flex;flex-direction:column;gap:8px;max-height:50vh;overflow-y:auto}
-  .pick-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:11px 14px;cursor:pointer;transition:background .12s,border-color .12s}
-  .pick-row:hover{background:var(--accent-soft);border-color:var(--accent)}
-  .pick-row .pt{font-weight:600}
-  .pick-row .pm{color:var(--muted);font-size:12.5px}
-
-  .footer{margin-top:40px;text-align:center;color:var(--muted);font-size:12.5px}
-  .hidden{display:none}
-  @media(max-width:520px){.row2{grid-template-columns:1fr}}
+@media(max-width:560px){
+  .head-inner{padding:14px 16px 0}
+  main{padding:20px 16px 60px}
+  .modal-head,.modal-body{padding-left:20px;padding-right:20px}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="site">
+<header>
+  <div class="head-inner">
     <div class="brand">
-      <h1>Moje przepisy</h1>
-      <p>Wspólny zbiór dań, jadłospis i schemat</p>
+      <h1>Fit Przepisy</h1>
+      <span>Przepisy w jednym miejscu</span>
     </div>
-    <div class="count" id="count"></div>
-  </header>
-
-  <div class="tabs">
-    <button class="tab active" id="tabRecipes">Przepisy</button>
-    <button class="tab" id="tabPlan">Jadłospis</button>
-    <button class="tab" id="tabSchema">Schemat</button>
-  </div>
-  <div class="syncbar" id="syncbar"></div>
-
-  <section id="viewRecipes">
-    <div class="toolbar">
+    <div class="controls">
       <div class="search">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="search" type="text" placeholder="Szukaj po nazwie lub składniku...">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+        <input id="search" type="text" placeholder="Szukaj przepisu lub składnika...">
       </div>
-      <select class="filter" id="catFilter"><option value="">Wszystkie kategorie</option></select>
-      <button class="btn btn-primary" id="addBtn">+ Dodaj przepis</button>
-      <button class="btn btn-ghost btn-sm" id="exportBtn" title="Zapisz kopię zapasową">Eksport</button>
-      <button class="btn btn-ghost btn-sm" id="importBtn" title="Wczytaj kopię zapasową">Import</button>
-      <input type="file" id="importFile" accept="application/json" style="display:none">
+      <span class="count" id="count"></span>
     </div>
-    <div id="list" class="grid"></div>
-  </section>
+    <div class="tabs" id="tabs"></div>
+  </div>
+</header>
 
-  <section id="viewPlan" class="hidden">
-    <div class="day-nav">
-      <button class="arrow" id="prevDay" aria-label="Poprzedni dzień">&lsaquo;</button>
-      <input type="date" id="dayInput">
-      <button class="arrow" id="nextDay" aria-label="Następny dzień">&rsaquo;</button>
-      <button class="btn btn-ghost btn-sm" id="todayBtn">Dziś</button>
-    </div>
-    <div class="day-label" id="dayLabel"></div>
-    <div class="day-sum" id="daySum"></div>
-    <div id="slots"></div>
-  </section>
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">Brak przepisów dla tego wyszukiwania.</div>
+</main>
 
-  <section id="viewSchema" class="hidden">
-    <div class="sch-head">
-      <h2>Schemat posiłku 525 kcal</h2>
-      <div>Program AM3, mężczyźni 80-95 kg. Dzienny zakres około 1925-2425 kcal (±10%).</div>
-      <div class="macros">
-        <span>Kalorie <b>≈ 525 kcal</b></span>
-        <span>Białko <b>45 g</b></span>
-        <span>Węglowodany <b>55 g</b></span>
-        <span>w tym błonnik <b>10 g</b></span>
-        <span>Tłuszcz <b>18 g</b></span>
-      </div>
-    </div>
-
-    <p style="color:var(--muted);font-size:14px;margin-bottom:14px">Posiłek 525 kcal składasz z czterech wymiennych części. W każdej kolumnie wybierasz jedną pozycję, a podane gramatury dają zbliżoną wartość, dzięki czemu makra wychodzą takie same niezależnie od wyboru.</p>
-
-    <div class="sch-grid">
-      <div class="sch-part">
-        <h4>Część białkowa <span class="kc">≈ 200 kcal</span></h4>
-        <ul>
-          <li>210 g filetu z indyka lub kurczaka</li>
-          <li>200 g chudego mięsa do 4% tł. (wołowe, cielęce, wieprzowe)</li>
-          <li>270 g białej ryby (masa po rozmrożeniu)</li>
-          <li>200 g łososia dzikiego</li>
-          <li>200 g chudego twarogu</li>
-          <li>300 g jogurtu naturalnego lub skyr</li>
-          <li>2 jaja całe rozmiar L + 5 białek (lub 3 całe jaja L)</li>
-          <li>50 g odżywki wysokobiałkowej (ok. 80% białka)</li>
-        </ul>
-      </div>
-      <div class="sch-part">
-        <h4>Część węglowodanowa <span class="kc">≈ 170 kcal</span></h4>
-        <ul>
-          <li>50 g dowolnej kaszy</li>
-          <li>50 g dowolnego ryżu</li>
-          <li>50 g dowolnego makaronu</li>
-          <li>45 g płatków owsianych</li>
-          <li>50 g płatków jaglanych, ryżowych lub orkiszowych</li>
-          <li>200 g dowolnych ziemniaków</li>
-          <li>60 g dowolnego pieczywa</li>
-          <li>50 g wafli ryżowych</li>
-          <li>50 g mąki z dowolnego zboża</li>
-        </ul>
-      </div>
-      <div class="sch-part">
-        <h4>Część tłuszczowa <span class="kc">≈ 90 kcal</span></h4>
-        <ul>
-          <li>10 g (łyżka) oleju lnianego na zimno</li>
-          <li>10 g oleju słonecznikowego lub z wiesiołka, tłoczonego na zimno</li>
-          <li>10 g oliwy z oliwek extra virgin</li>
-          <li>15 g masła</li>
-          <li>15 g majonezu</li>
-          <li>50 g śmietany 18%</li>
-          <li>30 g sera żółtego pełnotłustego</li>
-          <li>15 g orzechów</li>
-          <li>15 g pestek dyni lub słonecznika</li>
-          <li>60 g awokado</li>
-          <li>45 g mleczka kokosowego</li>
-        </ul>
-      </div>
-      <div class="sch-part">
-        <h4>Część błonnikowa <span class="kc">≈ 65 kcal</span></h4>
-        <ul>
-          <li>300 g dowolnych warzyw lub grzybów (poza kukurydzą, ziemniakami i strączkami)</li>
-          <li>200 g niskokalorycznych owoców (truskawki, maliny, poziomki, porzeczki, arbuz, melon, grejpfrut)</li>
-          <li>150 g pozostałych owoców (poza awokado i bananami)</li>
-        </ul>
-      </div>
-    </div>
-
-    <h3 class="sch-h3">Plan dnia (dni robocze, pon.-pt.)</h3>
-    <div class="sch-plan">
-      <table>
-        <tr><td class="t">do 10:00</td><td>Post</td></tr>
-        <tr><td class="t">10:00-11:00</td><td>Posiłek 525 kcal</td></tr>
-        <tr><td class="t">15:00-16:00</td><td>Posiłek 525 kcal</td></tr>
-        <tr><td class="t">ok. 17:00</td><td>Ekstra 350 kcal</td></tr>
-        <tr><td class="t">18:00-20:00</td><td>60 minut spaceru</td></tr>
-        <tr><td class="t">21:00-22:00</td><td>Posiłek 525 kcal</td></tr>
-      </table>
-    </div>
-    <div class="sch-exc">
-      <strong>Wyjątki dla ostatniego posiłku (21:00-22:00):</strong>
-      <ul>
-        <li>Środa: 1025 kcal (posiłek 525 + ekstra 500)</li>
-        <li>Sobota: ok. 1000 kcal (luźny posiłek)</li>
-      </ul>
-      <p>Plan obejmuje dni robocze. Sobota poza wieczorem oraz niedziela nie są jeszcze uzupełnione.</p>
-    </div>
-
-    <div class="sch-note">
-      <h4>Zasady przygotowania (skrót)</h4>
-      <ul>
-        <li>Gramatury dotyczą wagi produktu przed obróbką termiczną.</li>
-        <li>Mięso i ryby gotuj, piecz, grilluj, duś lub smaż na wodzie albo odrobinie oleju kokosowego lub kropli oliwy.</li>
-        <li>Oleje dodawaj najlepiej na surowo do gotowej potrawy, bo podgrzewanie tłuszczów bogatych w NNKT pogarsza ich jakość.</li>
-        <li>Wybieraj produkty mało przetworzone i pełnoziarniste, sezonowe i krajowe.</li>
-        <li>Przyprawy świeże i suszone oraz sól według uznania.</li>
-        <li>Post 12-14 godzin na dobę, w jego trakcie tylko woda, herbata lub kawa bez cukru i mleka. Ostatni posiłek nie później niż około 2 godziny przed snem.</li>
-        <li>Aktywność: 6-8 tys. kroków lub 45-60 min spaceru, ewentualnie dowolny trening.</li>
-      </ul>
-    </div>
-  </section>
-
-  <div class="footer">Bez podłączonej chmury dane zapisują się tylko w tej przeglądarce. Eksport robi kopię zapasową całości.</div>
-</div>
+<footer>
+  Na podstawie ebooków <b>„Fit Śniadania”</b>, <b>„Fit Obiady”</b> i <b>„Fit Fast Food”</b> Krzysztofa Domaszewskiego &middot; <a href="https://www.fitslodycze.pl" target="_blank" rel="noopener">fitslodycze.pl</a><br>
+  Wartości: kcal &middot; B białko &middot; T tłuszcz &middot; W węglowodany (g)
+</footer>
 
 <div class="overlay" id="overlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h2 id="modalTitle">Przepis</h2>
-      <button class="close" id="closeBtn" aria-label="Zamknij">&times;</button>
-    </div>
-    <div class="modal-body" id="modalBody"></div>
-  </div>
+  <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
 </div>
 
 <script>
-(function(){
-  "use strict";
+const RECIPES = [
+{cat:"Śniadania", name:"Angielskie Śniadanie - wersja Fit", portions:"1 porcja", time:"10-15 min",
+ ing:["1 jajo kurze (L)","50g pieczywa żytniego razowego (low carb: pieczywo niskowęglowodanowe)","50g chudej wędliny drobiowej (ok. 100 kcal/100g) lub domowej (str. 55); wege: parówka sojowa w plastrach","50-100g fasolki szparagowej (np. mrożona)","Pieczarki wedle uznania","Dymka (zielona część)","Mały pomidor, skrojony","Przyprawy: sól, pieprz, czosnek granulowany, suszone oregano","Opcjonalnie: szczypta zmielonych migdałów na fasolkę","1 łyżka oliwy z oliwek do smażenia"],
+ steps:["Mrożoną fasolkę przelewamy ciepłą wodą, odcedzamy. Wrzucamy na rozgrzaną patelnię i suszymy chwilę bez tłuszczu, żeby odparować wodę.","Dodajemy oliwę, czekamy aż się nagrzeje. Dodajemy jajo, wędlinę w paskach i pieczarki. Nie mieszamy składników razem.","Smażymy kilka minut na średnim ogniu. Posypujemy solą i pieprzem, fasolkę zmielonymi migdałami, wędlinę papryką wędzoną. Pieczone mięso dodajemy tylko na chwilę pod koniec.","Podpiekamy kromkę chleba w tosterze lub piekarniku bez tłuszczu. Chleb niskowęglowodanowy opiekamy krócej.","Chleb na talerz, posypujemy oregano i czosnkiem. Przykrywamy jajem, posypujemy dymką. Obok resztę składników i pomidora."],
+ nutri:[{l:"całość",kcal:370,b:20,t:16,w:29}]},
 
-  /* ============================================================
-     KONFIGURACJA WSPÓLNEJ CHMURY
-     ============================================================ */
-  var CLOUD = {
-    url: "https://zxuzpvujmwzroxvysabl.supabase.co",
-    key: "sb_publishable_jSaWrG6PiFAK8JoFyTTw-g_6lerupxG"
-  };
-  /* ============================================================ */
+{cat:"Śniadania", name:"Brownie Owsianka", portions:"1 porcja", time:"10 min",
+ ing:["3-4 placki bananowo-kakaowe (str. 25, połowa porcji)","1 miarka odżywki białkowej (ok. 25g)","1 łyżka kakao","1 łyżka słodzika (np. erytrytol)","50-100ml mleka","10g orzechów włoskich lub płatków migdałowych","100g borówek (lub jagody, jeżyny)"],
+ steps:["Placki przygotowujemy wg przepisu na str. 25. Studzimy chwilę w lodówce i kroimy na małe kawałki.","Odżywkę, kakao i słodzik mieszamy w misce. Dodajemy stopniowo mleko, mieszamy do żądanej konsystencji (można zblendować). Dosładzamy, można dodać wanilię.","Do miski dodajemy drobno skrojone placki, rozdrobnione orzechy i umyte owoce."],
+ note:"Zamiast polewy z odżywki można użyć wysokobiałkowej bazy do owsianki (str. 52) ze Skyrem waniliowym i kakao.",
+ nutri:[{l:"całość",kcal:402,b:30,t:11,w:52}]},
 
-  /* Stałe schematu 525 kcal */
-  var SCHEME={kcal:525,protein:45,carbs:55,fiber:10,fat:18};
+{cat:"Śniadania", name:"Burger Śniadaniowy", portions:"2 burgery", time:"10 min",
+ ing:["2 miękkie bułki ok. 70-80g","100g grillowanej piersi z kurczaka (str. 55) lub wędliny drobiowej; wege: wędlina/parówki roślinne","2 plastry żółtego sera (lub wegański, lub awokado)","1 jajo na twardo (można pominąć; wege: grillowane pieczarki)","Warzywa: pomidor, ogórek, sałata lodowa, cebula czerwona","Kilka łyżeczek sosu (str. 60) lub chrzan/musztarda/ketchup","Sól i pieprz","Kiełki (opcjonalnie)"],
+ steps:["Każdą bułkę kroimy przez środek i wydrążamy. Warzywa kroimy cienko.","Na dnie bułek kładziemy plastry ogórka, łyżeczkę sosu i cienko skrojoną cebulę.","Układamy kolejno: sałatę, ser, kurczaka, łyżeczkę sosu, pomidora, cebulę, jajo w plastrach. Sól, pieprz, kiełki. Przykrywamy górą bułki."],
+ nutri:[{l:"całość",kcal:632,b:49,t:15,w:51},{l:"porcja",kcal:316,b:24,t:8,w:25}]},
 
-  var RKEY="moje_przepisy_v1", PKEY="moje_jadlospis_v1";
-  var CATS=["Śniadanie","Obiad","Kolacja","Przekąska","Deser","Napój","Inne"];
-  var MEALS=["Śniadanie","Obiad","Kolacja","Przekąska"];
-  var cloudOn = !!(CLOUD.url && CLOUD.key);
+{cat:"Śniadania", name:"Chrupiąca Bagieta z Indykiem", portions:"1 duża lub 2 małe", time:"10 min",
+ ing:["1 szeroka bagietka ok. 150g","Ok. 150g pieczonej piersi z indyka lub kurczaka (str. 55) lub wędlina drobiowa","30-40g mozzarelli (lub parmezan / zmielone migdały)","Warzywa: pomidor, rukola lub sałata, czerwona cebula","Sos 1000 wysp (str. 60)","Koncentrat pomidorowy","Pieprz, suszone oregano"],
+ steps:["Bagietkę kroimy na pół. Dół smarujemy sosem, górę koncentratem. Na dół kładziemy rukolę i cebulę, potem plastry mięsa. Posypujemy serem, oregano i pieprzem, na koniec pomidor. Dociskamy górą.","Pieczemy w piekarniku rozgrzanym do maksimum (ok. 240-250°C) aż ser się rozpuści, a bułka zarumieni. Uwaga, żeby nie przypalić. Można przekroić na dwie porcje."],
+ note:"Mniej tłuszczu nasyconego: zamień ser na plastry awokado dodane po podgrzaniu. Na redukcji podawaj z surówką (str. 64-65).",
+ nutri:[{l:"całość",kcal:699,b:58,t:12,w:62},{l:"na porcję",kcal:350,b:29,t:6,w:31}]},
 
-  var canStore=true;
-  try{var t="__t";localStorage.setItem(t,"1");localStorage.removeItem(t);}catch(e){canStore=false;}
-  function load(key){if(!canStore)return null;try{var raw=localStorage.getItem(key);return raw?JSON.parse(raw):null;}catch(e){return null;}}
-  function persist(key,val){if(!canStore)return;try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
+{cat:"Śniadania", name:"Gofry Pełnoziarniste", portions:"2 porcje", time:"10 min",
+ ing:["75g mąki żytniej razowej (typ 2000)","2 łyżki erytrytolu lub ksylitolu","Szczypta proszku do pieczenia","Szczypta cynamonu","1 łyżeczka kakao lub karobu","1 jajo kurze (L)","6 łyżek mleka","Dodatki: konfitura (str. 46), polewa z odżywki, owoce, orzechy"],
+ steps:["W misce mieszamy suche składniki: mąkę, proszek, słodzik, cynamon, kakao. Dodajemy jajo i mleko. Mieszamy ok. 30 s.","Przelewamy na rozgrzaną gofrownicę posmarowaną olejem kokosowym. Pieczemy wg gofrownicy (autor: 4 min, 1300W). Po upieczeniu chwila w lodówce.","Polewa: odżywkę białkową mieszamy z mlekiem do żądanej konsystencji.","Smarujemy gofry konfiturą (1 łyżka na gofra), dodajemy polewę, orzechy, owoce."],
+ nutri:[{l:"całość bez dodatków",kcal:336,b:18,t:7,w:53},{l:"na porcję",kcal:168,b:9,t:4,w:26},{l:"porcja z dodatkami",kcal:339,b:20,t:9,w:38}]},
 
-  var recipes=load(RKEY)||[];
-  var plans=load(PKEY)||{};
+{cat:"Śniadania", name:"Gofry Tiramisu", portions:"2 gofry", time:"10 min",
+ ing:["75g mąki (pszenna, bezglutenowa, jaglana, teff, orkiszowa)","1 łyżeczka kawy rozpuszczalnej","2 łyżki erytrytolu lub ksylitolu","Szczypta proszku do pieczenia","1 jajo kurze (L)","4 łyżki mleka","Dodatki: jogurt Skyr waniliowy 150g, kakao, 200g owoców, 20g orzechów, polewa czekoladowa"],
+ steps:["Wszystkie składniki gofrów miksujemy w wysokiej misce ok. 30 s.","Przelewamy na rozgrzaną gofrownicę. Pieczemy wg gofrownicy (autor: 5 min, 1300W). Chwila w lodówce.","Smarujemy jogurtem waniliowym, posypujemy kakao, polewamy czekoladą. Podajemy z owocami."],
+ note:"Polewa: opcja 1 odżywka + kakao + mleko; opcja 2 rozpuszczona gorzka czekolada; opcja 3 krem czekoladowy (str. 48) rozrzedzony mlekiem.",
+ nutri:[{l:"całość bez dodatków",kcal:368,b:15,t:6,w:58},{l:"na porcję",kcal:184,b:7,t:3,w:29},{l:"porcja z dodatkami",kcal:349,b:18,t:10,w:48}]},
 
-  var el=function(id){return document.getElementById(id);};
-  var listEl=el("list"), countEl=el("count"), searchEl=el("search"), catFilterEl=el("catFilter");
-  var overlay=el("overlay"), modalTitle=el("modalTitle"), modalBody=el("modalBody");
-  var slotsEl=el("slots"), dayInput=el("dayInput"), dayLabel=el("dayLabel"), daySum=el("daySum");
-  var syncbar=el("syncbar");
+{cat:"Śniadania", name:"Gofry z Czekoladową Posypką", portions:"2 gofry", time:"10 min",
+ ing:["75g płatków błyskawicznych (owsiane, jaglane, z komosy)","2 łyżki erytrytolu lub ksylitolu","Szczypta proszku do pieczenia","1 jajo kurze (L)","4 łyżki mleka","Opcjonalnie: 1 łyżeczka kakao","200g borówek do podania","Posypka: 100g suszonych bananów, 1 łyżka kakao, opcjonalnie orzechy laskowe","Polewa: 1 miarka odżywki, 1-2 łyżeczki kakao, wanilia, mleko"],
+ steps:["Płatki mielimy na mąkę. Dodajemy kakao, proszek, słodzik. Mieszamy. Dodajemy jajo i mleko, mieszamy ok. 30 s.","Przelewamy na rozgrzaną gofrownicę. Pieczemy wg gofrownicy (autor: 4 min, 1300W). Chwila w lodówce.","Posypka: suszone banany rozbijamy w woreczku, mielimy na mąkę w blenderze, dodajemy kakao, przecedzamy przez sitko. 1 łyżeczka na gofra.","Polewa: mieszamy odżywkę, kakao, wanilię, słodzik z mlekiem do żądanej konsystencji."],
+ nutri:[{l:"całość",kcal:377,b:17,t:10,w:53},{l:"na porcję",kcal:189,b:8,t:5,w:26},{l:"porcja z dodatkami",kcal:349,b:20,t:6,w:57}]},
 
-  CATS.forEach(function(c){var o=document.createElement("option");o.value=c;o.textContent=c;catFilterEl.appendChild(o);});
+{cat:"Śniadania", name:"Granola z Odżywką Białkową", portions:"1 porcja", time:"10 min",
+ ing:["40g domowej granoli (str. 47)","Ok. 100ml mleka","35-40g odżywki białkowej (lub baza do owsianki str. 52)","Opcjonalnie: ekstrakt z wanilii","Ok. 150g owoców (np. truskawki i mrożone jagody)"],
+ steps:["Granolę przygotowujemy wg str. 47. Można dodać więcej płatków, by obniżyć udział cukrów.","Odżywkę blendujemy z mlekiem lub mieszamy w misce. Dodajemy granolę i owoce. Pół na pół owoce świeże i mrożone smakuje jak lodowy deser. Świetne jako posiłek potreningowy."],
+ nutri:[{l:"całość",kcal:398,b:45,t:9,w:38}]},
 
-  function esc(s){return (s||"").replace(/[&<>"']/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m];});}
-  function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
-  function lines(s){return (s||"").split(/\r?\n/).map(function(x){return x.trim();}).filter(Boolean);}
-  function recWord(n){return n===1?"przepis":(n%10>=2&&n%10<=4&&(n<10||n>20)?"przepisy":"przepisów");}
-  function recById(id){return recipes.find(function(r){return r.id===id;});}
-  function kcalNum(r){var n=parseInt((r&&r.kcal||"").replace(/\D/g,""),10);return isNaN(n)?0:n;}
-  function isScheme(r){return r && r.scheme!==false;}
-  function mealKcal(r){return isScheme(r)?SCHEME.kcal:kcalNum(r);}
+{cat:"Śniadania", name:"Keto Gofry", portions:"2 porcje", time:"10 min",
+ ing:["60g płatków migdałowych zmielonych na mąkę","1 jajo kurze (L)","3 łyżki mleka (może roślinne)","1 łyżka zmielonego erytrytolu","1 łyżeczka oleju kokosowego (płynny) lub oliwy","Szczypta proszku do pieczenia, szczypta soli","Jaja sadzone: 2 jaja (L), 1 łyżka oliwy, sól i pieprz","Dodatki: dymka, pomidorki koktajlowe lub surówka (str. 64-65)"],
+ steps:["Gofry: do miski suche składniki (migdały, erytrytol, proszek, sól). Dodajemy jajo, mleko, olej. Mieszamy rózgą, rozbijając grudki.","Gofrownicę smarujemy oliwą. Przelewamy masę (będzie rzadka, ale urośnie na 2 gofry). Pieczemy ok. 4 min (1300W), nie otwierać za wcześnie.","Jaja sadzone: na rozgrzanej oliwie smażymy 2 jaja, sól i pieprz, aż brzegi się zrumienią. Przekładamy na gofry, dekorujemy dymką, podajemy z warzywami lub surówką."],
+ nutri:[{l:"całość",kcal:728,b:38,t:58,w:14},{l:"na porcję",kcal:364,b:16,t:29,w:7}]},
 
-  /* ---------- CHMURA (Supabase REST) ---------- */
-  function baseUrl(){return CLOUD.url.replace(/\/$/,"");}
-  function hdr(){return {apikey:CLOUD.key,Authorization:"Bearer "+CLOUD.key};}
-  function setSync(state){
-    if(!cloudOn){syncbar.className="syncbar";syncbar.innerHTML='<span class="dot"></span>Zapis tylko na tym urządzeniu (chmura nieskonfigurowana)';return;}
-    if(state==="syncing"){syncbar.className="syncbar";syncbar.innerHTML='<span class="dot"></span>Synchronizacja z chmurą...';}
-    else if(state==="ok"){syncbar.className="syncbar ok";syncbar.innerHTML='<span class="dot"></span>Wspólna chmura: połączono <button id="syncRefresh">Odśwież</button>';}
-    else {syncbar.className="syncbar err";syncbar.innerHTML='<span class="dot"></span>Chmura: błąd połączenia <button id="syncRefresh">Spróbuj ponownie</button>';}
-    var b=el("syncRefresh"); if(b) b.addEventListener("click",function(){pullCloud(false);});
-  }
-  function cacheLocal(){persist(RKEY,recipes);persist(PKEY,plans);}
+{cat:"Śniadania", name:"Kukurydzianka Jagodowa", portions:"1 porcja", time:"5 min",
+ ing:["Krem: 150g jogurtu Skyr z jagodami","50ml mleka (może roślinne)","1 łyżka erytrytolu lub ksylitolu","Opcjonalnie: ekstrakt z wanilii","50g płatków kukurydzianych bez cukru (lub ryżowe)","10-15g suszonej żurawiny lub rodzynek","Ok. 50g mrożonych owoców","Opcjonalnie: 10g orzechów włoskich lub płatków migdałowych"],
+ steps:["Składniki na krem blendujemy do ujednolicenia (lub mieszamy łyżką, dodając mleko stopniowo).","Dodajemy płatki, owoce, żurawinę, orzechy. Większe mrożone owoce wcześniej rozbijamy w woreczku."],
+ nutri:[{l:"bez orzechów",kcal:377,b:20,t:1,w:70},{l:"z orzechami",kcal:442,b:22,t:7,w:71}]},
 
-  var pushTimer=null;
-  function pushCloud(immediate){
-    if(!cloudOn)return;
-    clearTimeout(pushTimer);
-    pushTimer=setTimeout(function(){
-      setSync("syncing");
-      fetch(baseUrl()+"/rest/v1/app_data?on_conflict=id",{
-        method:"POST",
-        headers:Object.assign(hdr(),{"Content-Type":"application/json","Prefer":"resolution=merge-duplicates"}),
-        body:JSON.stringify({id:"shared",data:{recipes:recipes,plans:plans},updated_at:new Date().toISOString()})
-      }).then(function(r){setSync(r.ok?"ok":"error");}).catch(function(){setSync("error");});
-    }, immediate?0:800);
-  }
-  function pullCloud(seedIfEmpty){
-    if(!cloudOn)return;
-    setSync("syncing");
-    fetch(baseUrl()+"/rest/v1/app_data?id=eq.shared&select=data",{headers:hdr()})
-      .then(function(r){if(!r.ok)throw 0;return r.json();})
-      .then(function(rows){
-        if(rows && rows.length && rows[0].data){
-          var d=rows[0].data;
-          recipes=Array.isArray(d.recipes)?d.recipes:[];
-          plans=(d.plans&&typeof d.plans==="object")?d.plans:{};
-          cacheLocal();renderRecipes();renderPlan();setSync("ok");
-        }else{
-          if(seedIfEmpty)pushCloud(true);else setSync("ok");
-        }
-      })
-      .catch(function(){setSync("error");});
-  }
+{cat:"Śniadania", name:"Naleśniki z Twarożkiem Waniliowym", portions:"6 naleśników", time:"15 min",
+ ing:["120g mąki (najlepiej typ 500-720; razowa, graham; bezglutenowo: Schar, teff, jaglana)","2 jaja kurze (L)","400ml mleka (pół na pół z wodą gazowaną)","Olej kokosowy lub bezzapachowa oliwa do smażenia","Nadzienie: 250g twarogu chudego","4 łyżki jogurtu naturalnego (lub serek homogenizowany)","4 łyżki erytrytolu lub ksylitolu","Wanilia (nasiona lub 1/2 łyżeczki ekstraktu)"],
+ steps:["Naleśniki: mąkę, jaja i mleko blendujemy. Smażymy na lekko natłuszczonej patelni z dwóch stron. Masę co jakiś czas mieszamy, bo mąka osiada.","Nadzienie: twaróg rozdrabniamy widelcem, dodajemy resztę składników, mieszamy.","Na naleśnik kładziemy łyżkę nadzienia, rozprowadzamy po połowie, składamy dwa razy.","Opcjonalnie: obsmażamy złożone naleśniki na rozgrzanej patelni z odrobiną tłuszczu na złoto, dla chrupkości."],
+ note:"Do podania: konfitura (46), mus truskawkowy (50), krem owocowo-waniliowy (49), polewa piernikowa (51). Kaloryczność bez konfitury.",
+ nutri:[{l:"całość",kcal:1084,b:89,t:26,w:115},{l:"na porcję",kcal:181,b:15,t:4,w:19}]},
 
-  function saveR(){persist(RKEY,recipes);pushCloud();}
-  function saveP(){persist(PKEY,plans);pushCloud();}
+{cat:"Śniadania", name:"Omlet Capricciosa", portions:"1 omlet", time:"15 min",
+ ing:["2 jaja kurze (L)","35g płatków owsianych błyskawicznych (lub jaglane, komosa)","Ok. 75g sera żółtego (np. mozzarella)","2 średnie pieczarki","30-40g chudej wędliny drobiowej","Przyprawy: sól, pieprz, oregano, czosnek granulowany","Koncentrat pomidorowy","1 łyżeczka erytrytolu lub ksylitolu"],
+ steps:["Ser i wędlinę kroimy na kawałki, pieczarki na cienkie plastry.","Spód: jaja blendujemy z płatkami. Na lekko natłuszczonej patelni smażymy pod przykryciem, aż się zetnie. Pieczarki grillujemy osobno.","Odwracamy omlet, smarujemy koncentratem (2 łyżeczki), posypujemy słodzikiem. Rozkładamy ser, wędlinę, pieczarki. Smażymy pod przykryciem ok. 3 min do rozpuszczenia sera.","Zsuwamy na talerz, posypujemy ziołami i pieprzem. Podajemy z surówką (str. 64-65)."],
+ nutri:[{l:"całość",kcal:546,b:41,t:27,w:26},{l:"na porcję (slice)",kcal:91,b:6,t:4,w:4}]},
 
-  /* ---------- WIDOK PRZEPISY ---------- */
-  function renderRecipes(){
-    var q=searchEl.value.trim().toLowerCase(), cat=catFilterEl.value;
-    var filtered=recipes.filter(function(r){
-      if(cat && r.category!==cat)return false;
-      if(!q)return true;
-      return (r.title+" "+(r.ingredients||"")+" "+(r.description||"")).toLowerCase().indexOf(q)>-1;
-    });
-    countEl.innerHTML="<b>"+recipes.length+"</b> "+recWord(recipes.length);
-    listEl.innerHTML="";
-    if(filtered.length===0){
-      var e=document.createElement("div");e.className="empty";
-      e.innerHTML=recipes.length===0
-        ? '<div class="big">Zbiór jest jeszcze pusty</div><div>Kliknij „Dodaj przepis” albo użyj Importu, żeby wczytać gotowy plik.</div>'
-        : '<div class="big">Nic nie znaleziono</div><div>Zmień wyszukiwanie albo filtr kategorii.</div>';
-      listEl.appendChild(e);return;
-    }
-    filtered.forEach(function(r,i){
-      var card=document.createElement("div");card.className="card";card.style.animationDelay=(i*0.03)+"s";
-      var meta='<span>🔥 '+mealKcal(r)+' kcal</span>';
-      if(isScheme(r)) meta+='<span>B '+SCHEME.protein+' · W '+SCHEME.carbs+' · T '+SCHEME.fat+'</span>';
-      if(r.servings) meta+='<span>🍽 '+esc(r.servings)+'</span>';
-      card.innerHTML=(r.category?'<span class="pill">'+esc(r.category)+'</span>':'')+
-        '<h3>'+esc(r.title)+'</h3>'+
-        (r.description?'<div class="desc">'+esc(r.description)+'</div>':'')+
-        '<div class="meta">'+meta+'</div>';
-      card.addEventListener("click",function(){viewRecipe(r.id);});
-      listEl.appendChild(card);
-    });
-  }
+{cat:"Śniadania", name:"Omlet Francuski", portions:"1 porcja", time:"10 min",
+ ing:["2 jaja kurze (L)","75g chudej wędliny drobiowej","Dymka (zielona część)","Przyprawy: sól, pieprz, papryka wędzona, czosnek granulowany","1 łyżeczka oliwy z oliwek","Do podania: sos (60), surówka (64-65), grzanki czosnkowe (56), napój (66)"],
+ steps:["Jaja rozbijamy, mieszamy ok. 30-60 s na jednolitą, lekko spienioną masę.","Na rozgrzanym tłuszczu rozprowadzamy masę. Dodajemy dymkę i kawałki wędliny. Doprawiamy: czosnek, sól, pieprz, papryka wędzona.","Smażymy pod przykryciem, aż się zetnie.","Zsuwamy na talerz, składamy na pół, kroimy na dwie części i układamy jedna na drugiej. Podajemy z surówką i sosem."],
+ nutri:[{l:"sam omlet",kcal:277,b:25,t:15,w:0},{l:"z grzanką czosnkową (50g)",kcal:451,b:29,t:21,w:24}]},
 
-  function viewRecipe(id){
-    var r=recById(id);if(!r)return;
-    modalTitle.textContent="Przepis";
-    var ing=lines(r.ingredients), steps=lines(r.steps);
-    var stat='';
-    if(r.servings) stat+='<span>🍽 '+esc(r.servings)+'</span>';
-    stat+='<span>🔥 '+mealKcal(r)+' kcal</span>';
-    if(isScheme(r)) stat+='<span>Białko '+SCHEME.protein+' g</span><span>Węgl. '+SCHEME.carbs+' g (błonnik '+SCHEME.fiber+' g)</span><span>Tłuszcz '+SCHEME.fat+' g</span>';
-    var html='<div class="detail">'+
-      (r.category?'<span class="pill">'+esc(r.category)+'</span>':'')+
-      '<div style="font-family:Fraunces,serif;font-size:28px;font-weight:600;line-height:1.1;margin:6px 0">'+esc(r.title)+'</div>'+
-      (r.description?'<div style="color:var(--muted)">'+esc(r.description)+'</div>':'')+
-      '<div class="stat-row">'+stat+'</div>'+
-      (isScheme(r)?'<div class="macro-note">Makra wg schematu posiłku 525 kcal (±10%).</div>':'');
-    if(ing.length) html+='<h3>Składniki</h3><ul>'+ing.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>';
-    if(steps.length) html+='<h3>Przygotowanie</h3><ol>'+steps.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ol>';
-    if(r.notes) html+='<div class="notes"><strong>Notatki:</strong> '+esc(r.notes)+'</div>';
-    html+='<div class="detail-actions"><button class="btn btn-ghost" id="editR">Edytuj</button><button class="btn btn-ghost" id="delR" style="color:var(--accent)">Usuń</button></div></div>';
-    modalBody.innerHTML=html;openModal();
-    el("editR").addEventListener("click",function(){openForm(r);});
-    el("delR").addEventListener("click",function(){
-      if(confirm("Usunąć przepis „"+r.title+"”?")){
-        recipes=recipes.filter(function(x){return x.id!==id;});
-        saveR();closeModal();renderRecipes();renderPlan();
-      }
-    });
-  }
+{cat:"Śniadania", name:"Omlet Low Carb z Serem Feta", portions:"1 omlet", time:"15 min",
+ ing:["3 jaja kurze (L)","Ok. 35g sera feta","Warzywa: pomidorki koktajlowe, cebula czerwona, zielenina (rukola, szpinak, sałaty)","Przyprawy: sól, pieprz, suszone oregano","Oliwa z oliwek","Ocet balsamiczny","Koncentrat pomidorowy"],
+ steps:["Białka oddzielamy od żółtek. Białka ubijamy ze szczyptą soli na sztywno. Dodajemy żółtka po jednym, miksujemy na wolnych obrotach.","Na lekko natłuszczonej patelni smażymy pod przykryciem ok. 4-4,5 min. Odwracamy i smażymy jeszcze 2 min (początkującym łatwiej na dwóch patelniach).","Zieleninę mieszamy z oliwą, pieprzem i octem balsamicznym. Pomidorki i cebulę kroimy cienko.","Omlet smarujemy koncentratem (3 łyżeczki), posypujemy oregano i pieprzem. Układamy zieleninę, fetę, cebulę, pomidory."],
+ nutri:[{l:"całość",kcal:400,b:24,t:27,w:7}]},
 
-  function openForm(r){
-    var edit=!!r;r=r||{};
-    var sch = r.id ? isScheme(r) : true;
-    modalTitle.textContent=edit?"Edytuj przepis":"Nowy przepis";
-    var opts=CATS.map(function(c){return '<option value="'+c+'"'+(r.category===c?' selected':'')+'>'+c+'</option>';}).join("");
-    modalBody.innerHTML=
-      '<div class="field"><label>Nazwa dania</label><input id="f_title" type="text" placeholder="np. Gulasz drobiowy" value="'+esc(r.title)+'"></div>'+
-      '<div class="field"><label class="check"><input id="f_scheme" type="checkbox"'+(sch?' checked':'')+'><span>Posiłek wg schematu 525 kcal<small>białko 45 g · węgl. 55 g (błonnik 10 g) · tłuszcz 18 g</small></span></label></div>'+
-      '<div class="row2">'+
-        '<div class="field"><label>Kategoria</label><select id="f_cat"><option value="">(brak)</option>'+opts+'</select></div>'+
-        '<div class="field"><label>Porcje</label><input id="f_serv" type="text" placeholder="np. 1" value="'+esc(r.servings)+'"></div>'+
-        '<div class="field"><label>Kcal / porcja <span class="hint">(gdy bez schematu)</span></label><input id="f_kcal" type="text" placeholder="np. 350" value="'+esc(r.kcal)+'"></div>'+
-      '</div>'+
-      '<div class="field"><label>Krótki opis <span class="hint">(opcjonalnie)</span></label><input id="f_desc" type="text" placeholder="jedno zdanie" value="'+esc(r.description)+'"></div>'+
-      '<div class="field"><label>Składniki <span class="hint">(każdy w nowej linii)</span></label><textarea id="f_ing" rows="6" placeholder="200 g ziemniaków&#10;210 g filetu z kurczaka&#10;sól, pieprz">'+esc(r.ingredients)+'</textarea></div>'+
-      '<div class="field"><label>Sposób przygotowania <span class="hint">(każdy krok w nowej linii)</span></label><textarea id="f_steps" rows="7" placeholder="Ziemniaki ugotuj...&#10;Dodaj jajko...">'+esc(r.steps)+'</textarea></div>'+
-      '<div class="field"><label>Notatki <span class="hint">(opcjonalnie)</span></label><input id="f_notes" type="text" placeholder="np. uwagi do dania" value="'+esc(r.notes)+'"></div>'+
-      '<div class="form-actions"><button class="btn btn-ghost" id="cancelBtn">Anuluj</button><button class="btn btn-primary" id="saveBtn">'+(edit?"Zapisz zmiany":"Dodaj przepis")+'</button></div>';
-    openModal();el("f_title").focus();
-    var schemeBox=el("f_scheme"), kcalInput=el("f_kcal");
-    function syncKcal(){ if(schemeBox.checked){kcalInput.value="525";kcalInput.disabled=true;} else {kcalInput.disabled=false; if(kcalInput.value==="525")kcalInput.value="";} }
-    schemeBox.addEventListener("change",syncKcal);syncKcal();
-    el("cancelBtn").addEventListener("click",function(){ edit?viewRecipe(r.id):closeModal(); });
-    el("saveBtn").addEventListener("click",function(){
-      var title=el("f_title").value.trim();
-      if(!title){alert("Podaj nazwę dania.");return;}
-      var scheme=schemeBox.checked;
-      var data={id:r.id||uid(),title:title,category:el("f_cat").value,servings:el("f_serv").value.trim(),
-        kcal:scheme?"525":kcalInput.value.trim(),scheme:scheme,description:el("f_desc").value.trim(),
-        ingredients:el("f_ing").value,steps:el("f_steps").value,notes:el("f_notes").value.trim()};
-      if(r.id){recipes=recipes.map(function(x){return x.id===r.id?data:x;});}else{recipes.unshift(data);}
-      saveR();renderRecipes();renderPlan();viewRecipe(data.id);
-    });
-  }
+{cat:"Śniadania", name:"Owsianka z Pieczoną Granolą", portions:"granola + owsianka", time:"5 lub 20 min",
+ ing:["Granola: 100g płatków błyskawicznych (owsiane, gryczane, komosa)","2-3 łyżki syropu klonowego lub miodu","Ok. 35g rodzynek lub żurawiny","15g płatków migdałowych (lub orzechy)","100-150g owoców (maliny, truskawki, jeżyny, jagody, borówki; mogą być mrożone)","100ml mleka lub baza do owsianki (str. 52)"],
+ steps:["Granola: w misce mieszamy płatki z syropem do równomiernego pokrycia.","Rozprowadzamy na papierze do pieczenia. Pieczemy 20 min w 150°C (góra-dół), aż się zarumienią. Studzimy.","Łamiemy na kawałki, dodajemy rodzynki i migdały. Mieszamy. Przechowujemy pod przykryciem.","Owsianka: 60g granoli (ok. 1/3 porcji) zalewamy mlekiem lub polewą z odżywki / bazą do owsianki. Dodajemy owoce."],
+ nutri:[{l:"ze 100ml mleka 0%",kcal:325,b:11,t:7,w:41},{l:"z mlekiem + odżywką 25g",kcal:407,b:29,t:7,w:43},{l:"z bazą do owsianki",kcal:398,b:27,t:6,w:45}]},
 
-  /* ---------- WIDOK JADŁOSPIS ---------- */
-  function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
-  var currentDate=ymd(new Date());
-  function setDay(str){currentDate=str;dayInput.value=str;renderPlan();}
-  function shiftDay(delta){var p=currentDate.split("-");var d=new Date(+p[0],+p[1]-1,+p[2]);d.setDate(d.getDate()+delta);setDay(ymd(d));}
+{cat:"Śniadania", name:"Placki Bananowo-Kakaowe", portions:"6-8 małych placków", time:"10 min",
+ ing:["1 mały banan (ok. 100g bez skórki)","1 jajo kurze (L)","2 łyżki kakao","2 łyżki erytrytolu lub ksylitolu","50g płatków błyskawicznych (owsiane, gryczane, jaglane, komosa)","Odrobina sody oczyszczonej (~1/5 łyżeczki)","Dodatki: 200g borówek, 15g orzechów, polewa z odżywki"],
+ steps:["Wszystkie składniki blendujemy do ujednolicenia, aż płatki maksymalnie się rozdrobnią.","Rozgrzewamy patelnię (można dwie na raz, po 3-4 placki).","Przekładamy masę łyżką lub wprost z blendera. Smażymy z dwóch stron bez tłuszczu. Po usmażeniu chwila w lodówce.","Podajemy jako jedna porcja lub dwie po 3-4 placki z dodatkami."],
+ nutri:[{l:"całość (same placki)",kcal:383,b:16,t:11,w:64},{l:"porcja z dodatkami",kcal:347,b:19,t:11,w:49}]},
 
-  function totals(items){
-    var t={kcal:0,sch:0};
-    items.forEach(function(it){var r=recById(it.id);if(!r)return;t.kcal+=mealKcal(r);if(isScheme(r))t.sch++;});
-    t.protein=t.sch*SCHEME.protein;t.carbs=t.sch*SCHEME.carbs;t.fiber=t.sch*SCHEME.fiber;t.fat=t.sch*SCHEME.fat;
-    return t;
-  }
+{cat:"Śniadania", name:"Placki Wysokobiałkowe", portions:"1 porcja", time:"10 min",
+ ing:["1 jajo kurze (L)","1 jogurt Skyr waniliowy (150g)","50g płatków błyskawicznych (owsiane lub gryczane, jaglane, komosa)","1 łyżka erytrytolu (lub inny słodzik)","Odrobina proszku do pieczenia (można pominąć)","Opcjonalnie: konfitura (46) lub mus truskawkowy (50)"],
+ steps:["Wszystkie składniki blendujemy na jednolitą masę. Na rozgrzanej patelni formujemy małe placki. Smażymy z dwóch stron bez tłuszczu do zarumienienia (5-6 placków). Po usmażeniu chwila w lodówce."],
+ note:"Kaloryczność dla samych placków, bez konfitury.",
+ nutri:[{l:"całość",kcal:369,b:27,t:9,w:51}]},
 
-  function renderPlan(){
-    dayInput.value=currentDate;
-    var p=currentDate.split("-");var d=new Date(+p[0],+p[1]-1,+p[2]);
-    dayLabel.textContent=d.toLocaleDateString("pl-PL",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-    var day=plans[currentDate]||[];
-    var t=totals(day);
-    if(day.length){
-      var macro = t.sch ? (' · B <b>'+t.protein+' g</b> · W <b>'+t.carbs+' g</b> (błonnik '+t.fiber+' g) · T <b>'+t.fat+' g</b>') : '';
-      daySum.innerHTML='Posiłki: '+day.length+' · ok. <b>'+t.kcal+' kcal</b>'+macro+(t.sch?' <span style="font-size:12px">(wg schematu, ±10%)</span>':'');
-    } else { daySum.innerHTML='Brak zaplanowanych dań na ten dzień.'; }
+{cat:"Śniadania", name:"Racuchy Sernikowe", portions:"2 osoby (10-15 szt.)", time:"15 min",
+ ing:["3 jaja kurze (L)","250g twarogu chudego","5 łyżek erytrytolu lub ksylitolu","75g mąki pszennej typ 500 (lub bezglutenowa)","Wanilia (ekstrakt lub nasiona)","Odrobina proszku do pieczenia (opcjonalnie)","Olej kokosowy lub bezzapachowa oliwa do smażenia"],
+ steps:["Białka oddzielamy od żółtek. Białka ubijamy na sztywną pianę.","Twaróg rozbijamy widelcem, dodajemy żółtka, wanilię, słodzik. Miksujemy 30-60 s. Dodajemy mąkę i proszek. Na koniec delikatnie wmieszujemy pianę z białek.","Patelnię delikatnie natłuszczamy. Smażymy racuchy z dwóch stron na średnim ogniu. Małe racuchy łatwiej odwrócić. Najlepiej jeść ciepłe."],
+ nutri:[{l:"całość",kcal:785,b:76,t:24,w:66},{l:"na porcję",kcal:392,b:38,t:12,w:33}]},
 
-    slotsEl.innerHTML="";
-    MEALS.forEach(function(meal){
-      var items=day.filter(function(it){return it.meal===meal;});
-      var st=totals(items);
-      var box=document.createElement("div");box.className="slot";
-      var inner='<div class="slot-head"><h4>'+meal+'</h4>'+(items.length?'<span class="skcal">'+st.kcal+' kcal</span>':'')+'</div><div class="slot-items">';
-      if(items.length===0){inner+='<div class="slot-empty">Nic nie zaplanowano</div>';}
-      else{items.forEach(function(it){
-        var r=recById(it.id);
-        if(!r){inner+='<div class="pitem"><span class="pname" style="color:var(--muted);font-style:italic">(przepis usunięty)</span><button class="rm" data-rm="'+it._k+'">&times;</button></div>';}
-        else{inner+='<div class="pitem"><span class="pname" data-open="'+r.id+'">'+esc(r.title)+'</span><span class="pk">'+mealKcal(r)+' kcal</span><button class="rm" data-rm="'+it._k+'">&times;</button></div>';}
-      });}
-      inner+='</div><button class="add-link" data-add="'+meal+'">+ dodaj danie</button>';
-      box.innerHTML=inner;slotsEl.appendChild(box);
-    });
-    slotsEl.querySelectorAll("[data-open]").forEach(function(n){n.addEventListener("click",function(){viewRecipe(n.getAttribute("data-open"));});});
-    slotsEl.querySelectorAll("[data-add]").forEach(function(n){n.addEventListener("click",function(){openPicker(n.getAttribute("data-add"));});});
-    slotsEl.querySelectorAll("[data-rm]").forEach(function(n){n.addEventListener("click",function(){removeFromPlan(n.getAttribute("data-rm"));});});
-  }
+{cat:"Śniadania", name:"Racuchy z Brzoskwinią", portions:"2 osoby", time:"15 min",
+ ing:["100g mąki pszennej uniwersalnej (lub bezglutenowa, orkiszowa, teff, jaglana, kasztanowa)","100ml mleka","1 duża brzoskwinia lub nektarynka (lub gruszka / owoce z puszki ok. 150-200g)","1 jajo kurze (L)","Odrobina proszku do pieczenia","2 łyżki zmielonego erytrytolu lub ksylitolu","Olej kokosowy lub bezzapachowa oliwa","Krem: jogurt Skyr waniliowy 150g, 1 łyżka słodzika, wanilia"],
+ steps:["Owoce obieramy i kroimy w drobną kostkę.","Białko oddzielamy od żółtka. Białko ubijamy na sztywną pianę.","Do żółtka dodajemy mleko, mąkę, proszek i słodzik. Miksujemy na kleistą masę. Dodajemy owoce, mieszamy.","Na koniec delikatnie wmieszujemy ubite białko.","Smażymy na lekko natłuszczonej patelni na złoto z dwóch stron.","Krem: jogurt mieszamy ze słodzikiem i wanilią. Racuchy smarujemy lub maczamy."],
+ note:"Kaloryczność z kremem waniliowym.",
+ nutri:[{l:"całość",kcal:728,b:35,t:12,w:116},{l:"na porcję",kcal:364,b:18,t:6,w:58}]},
 
-  function addToPlan(meal,rid){
-    if(!plans[currentDate])plans[currentDate]=[];
-    plans[currentDate].push({_k:uid(),meal:meal,id:rid});
-    saveP();renderPlan();
-  }
-  function removeFromPlan(k){
-    var day=plans[currentDate]||[];
-    plans[currentDate]=day.filter(function(it){return it._k!==k;});
-    if(plans[currentDate].length===0)delete plans[currentDate];
-    saveP();renderPlan();
-  }
+{cat:"Śniadania", name:"Sałatka Cezar", portions:"1 porcja", time:"15 min",
+ ing:["1 nieduża główka sałaty rzymskiej","50g chleba żytniego razowego","2 łyżeczki parmezanu (lub inny twardy ser / migdały)","Białko do wyboru: 2 jaja na twardo / 150g piersi z kurczaka lub indyka / 2 parówki sojowe","Dressing: 2 łyżki jogurtu naturalnego","1/2 łyżeczki musztardy","1 łyżeczka erytrytolu lub ksylitolu","1/2 łyżeczki czosnku granulowanego lub 1 ząbek","Pieprz, odrobina sosu sojowego, sok z cytryny lub limonki"],
+ steps:["Dressing: składniki mieszamy w miseczce do ujednolicenia.","Sałatę myjemy, osuszamy, odkrawamy twardą część, szatkujemy. Mieszamy z 1 łyżką dressingu.","Grzanki: chleb opiekamy w tosterze na chrupiąco, kroimy w kostkę, dodajemy do sałatki.","Dodajemy jajka lub zamiennik, polewamy resztą dressingu, posypujemy parmezanem i pieprzem."],
+ nutri:[{l:"z 2 jajkami",kcal:373,b:23,t:17,w:26},{l:"z drobiem",kcal:378,b:46,t:8,w:26},{l:"z parówkami sojowymi",kcal:391,b:25,t:17,w:34}]},
 
-  function openPicker(meal){
-    modalTitle.textContent="Dodaj do: "+meal;
-    if(recipes.length===0){
-      modalBody.innerHTML='<div class="empty"><div class="big">Baza przepisów jest pusta</div><div>Najpierw dodaj przepisy w zakładce „Przepisy”.</div></div>';
-      openModal();return;
-    }
-    modalBody.innerHTML='<div class="field" style="margin-bottom:14px"><input id="pickSearch" type="text" placeholder="Szukaj przepisu..."></div><div class="pick-list" id="pickList"></div>';
-    openModal();
-    var input=el("pickSearch"), listBox=el("pickList");
-    function draw(){
-      var q=input.value.trim().toLowerCase();
-      var arr=recipes.filter(function(r){return !q || (r.title+" "+(r.ingredients||"")).toLowerCase().indexOf(q)>-1;});
-      listBox.innerHTML="";
-      if(arr.length===0){listBox.innerHTML='<div class="slot-empty">Brak pasujących przepisów</div>';return;}
-      arr.forEach(function(r){
-        var row=document.createElement("div");row.className="pick-row";
-        row.innerHTML='<div><div class="pt">'+esc(r.title)+'</div><div class="pm">'+(r.category?esc(r.category):"")+(r.category?" · ":"")+mealKcal(r)+' kcal</div></div><span style="color:var(--accent);font-weight:700">+</span>';
-        row.addEventListener("click",function(){addToPlan(meal,r.id);closeModal();});
-        listBox.appendChild(row);
-      });
-    }
-    input.addEventListener("input",draw);draw();input.focus();
-  }
+{cat:"Śniadania", name:"Tofucznica", portions:"1 porcja", time:"10 min",
+ ing:["150g tofu","1 mała cebula","5-6 niedużych pieczarek","2 łyżki oliwy z oliwek","Przyprawy: sól, pieprz, czosnek granulowany (lub ząbek)","Opcjonalnie: 10-15g żółtego sera (nada konsystencji jajecznicy)","Dymka do dekoracji"],
+ steps:["Cebulę i pieczarki szatkujemy drobno. Tofu osuszamy ręcznikami i rozdrabniamy widelcem.","Na rozgrzanej oliwie smażymy cebulę i pieczarki ok. 4-5 min, aż cebula się zeszkli.","Dodajemy tofu i przyprawy. Smażymy 1-2 min. Na koniec dodajemy ser, mieszamy aż się rozpuści. Dekorujemy dymką. Podajemy z surówką (64-65) lub grzankami czosnkowymi (56)."],
+ nutri:[{l:"całość",kcal:358,b:23,t:29,w:3},{l:"z serem",kcal:394,b:25,t:31,w:3}]},
 
-  /* ---------- modal helpers ---------- */
-  function openModal(){overlay.classList.add("open");document.body.style.overflow="hidden";}
-  function closeModal(){overlay.classList.remove("open");document.body.style.overflow="";}
-  el("closeBtn").addEventListener("click",closeModal);
-  overlay.addEventListener("click",function(e){if(e.target===overlay)closeModal();});
-  document.addEventListener("keydown",function(e){if(e.key==="Escape")closeModal();});
+{cat:"Śniadania", name:"Wrap z Tuńczykiem", portions:"2 małe porcje", time:"15 min",
+ ing:["1 tortilla (str. 61) lub kupna; alternatywnie bagieta/bułka","1 puszka tuńczyka w sosie własnym (120g bez zalewy)","Przyprawy: papryka wędzona (1-2 łyżeczki), czosnek granulowany, chili/cayenne, sól, pieprz","2 łyżki oliwy czosnkowej lub oleju","Warzywa: sałata, czerwona papryka, cebula, ogórek konserwowy","1-2 łyżeczki koncentratu (wersja z bułką)","Opcjonalnie: sos domowy (str. 60)"],
+ steps:["Odlewamy wodę z tuńczyka. Dodajemy oliwę i przyprawy, mieszamy, doprawiamy.","Cebulę, paprykę i ogórek szatkujemy drobno, dodajemy do tuńczyka.","Tortillę rozkładamy na folii, można posmarować sosem. Kładziemy sałatę, farsz, przykrywamy liściem sałaty. Zwijamy, owijamy folią, kroimy na pół.","Wersja z bułką: bagietkę kroimy wzdłuż i wydrążamy. Dół smarujemy sosem, górę koncentratem. Sałata, farsz, sałata, przykrywamy. Kroimy na pół."],
+ nutri:[{l:"całość",kcal:592,b:39,t:20,w:57},{l:"porcja",kcal:296,b:19,t:10,w:29},{l:"porcja z bułką",kcal:336,b:21,t:11,w:27}]},
 
-  /* ---------- zakładki ---------- */
-  function switchView(name){
-    el("viewRecipes").classList.toggle("hidden",name!=="recipes");
-    el("viewPlan").classList.toggle("hidden",name!=="plan");
-    el("viewSchema").classList.toggle("hidden",name!=="schema");
-    el("tabRecipes").classList.toggle("active",name==="recipes");
-    el("tabPlan").classList.toggle("active",name==="plan");
-    el("tabSchema").classList.toggle("active",name==="schema");
-    if(name==="plan")renderPlan();
-  }
-  el("tabRecipes").addEventListener("click",function(){switchView("recipes");});
-  el("tabPlan").addEventListener("click",function(){switchView("plan");});
-  el("tabSchema").addEventListener("click",function(){switchView("schema");});
+{cat:"Drugie śniadania", name:"Koktajl Owsiany z Owocami", portions:"1 porcja", time:"5 min",
+ ing:["1 mały banan (100g bez skórki)","100g malin lub truskawek","1 jogurt Skyr naturalny (150g)","30g płatków owsianych błyskawicznych (lub orkiszowe, jaglane, komosa)","Ekstrakt z wanilii lub nasiona","Erytrytol lub ksylitol wedle uznania"],
+ steps:["Wszystkie składniki blendujemy do maksymalnego rozdrobnienia płatków. Ilością mleka regulujemy konsystencję. Dosładzamy wedle uznania."],
+ nutri:[{l:"całość",kcal:354,b:24,t:2,w:63}]},
 
-  /* ---------- toolbar ---------- */
-  el("addBtn").addEventListener("click",function(){openForm(null);});
-  searchEl.addEventListener("input",renderRecipes);
-  catFilterEl.addEventListener("change",renderRecipes);
-  el("prevDay").addEventListener("click",function(){shiftDay(-1);});
-  el("nextDay").addEventListener("click",function(){shiftDay(1);});
-  el("todayBtn").addEventListener("click",function(){setDay(ymd(new Date()));});
-  dayInput.addEventListener("change",function(){if(dayInput.value)setDay(dayInput.value);});
+{cat:"Drugie śniadania", name:"Potreningowe Płatki z Odżywką", portions:"1 porcja", time:"5 min",
+ ing:["1 czubata miarka odżywki białkowej (25-30g)","100ml mleka","30g płatków kukurydzianych bez cukru lub ryżowych","20g rodzynek (lub inne suszone owoce)","100g świeżych owoców (borówki, jagody, maliny, truskawki)","Kilka rozdrobnionych orzechów lub migdałów (ok. 5-7g)"],
+ steps:["Mleko blendujemy z odżywką. W misce umieszczamy pozostałe składniki i zalewamy mieszanką."],
+ nutri:[{l:"całość",kcal:397,b:33,t:4,w:59}]},
 
-  el("exportBtn").addEventListener("click",function(){
-    var blob=new Blob([JSON.stringify({recipes:recipes,plans:plans},null,2)],{type:"application/json"});
-    var a=document.createElement("a");a.href=URL.createObjectURL(blob);
-    a.download="przepisy-kopia-"+new Date().toISOString().slice(0,10)+".json";a.click();URL.revokeObjectURL(a.href);
+{cat:"Drugie śniadania", name:"Sałatka Caprese", portions:"1 porcja", time:"5 min",
+ ing:["125g sera mozzarella (1 kulka bez zalewy) lub 200g light","Pomidorki koktajlowe","Sałata rzymska (1 średnia główka)","1 łyżka oliwy z oliwek","Listki świeżej bazylii","Przyprawy: sól, pieprz, suszone oregano","Opcjonalnie: kiełki"],
+ steps:["Sałatę myjemy, suszymy, odkrawamy twarde części, szatkujemy. Dodajemy listki bazylii.","Odlewamy zalewę z mozzarelli, osuszamy ser, kroimy. Dodajemy oliwę, pieprz, oregano, mieszamy.","Dekorujemy pomidorkami i opcjonalnie kiełkami. Na koniec sól i oregano."],
+ nutri:[{l:"całość",kcal:389,b:23,t:28,w:1}]},
+
+{cat:"Drugie śniadania", name:"Serek Wiejski na Słodko z Ananasem", portions:"1 porcja", time:"5 min",
+ ing:["1 serek wiejski lekki 150g","150g ananasa świeżego lub z puszki","10g wiórków kokosowych","15g orzechów włoskich (lub 25g płatków: kukurydziane, ryżowe, owsiane)"],
+ steps:["Wszystkie składniki mieszamy w misce."],
+ nutri:[{l:"z orzechami",kcal:361,b:21,t:20,w:27},{l:"z płatkami",kcal:353,b:21,t:10,w:44}]},
+
+{cat:"Drugie śniadania", name:"Shake Proteinowy", portions:"1 porcja", time:"5 min",
+ ing:["200g truskawek (lub jagody, maliny, borówki)","1 łyżka erytrytolu lub ksylitolu","40-50g odżywki białkowej waniliowej lub śmietankowej","50ml dowolnego mleka","Opcjonalnie: ekstrakt z wanilii"],
+ steps:["Wszystkie składniki blendujemy do maksymalnego ujednolicenia. Można podawać na kostkach lodu."],
+ nutri:[{l:"całość",kcal:268,b:45,t:2,w:21}]},
+
+{cat:"Drugie śniadania", name:"Tosty Pełnoziarniste", portions:"1 porcja", time:"5 min",
+ ing:["100g chleba żytniego razowego (2 kromki po 50g)","30g sera żółtego w plastrach (np. mozzarella)","Ok. 40-50g niskokalorycznej wędliny drobiowej","Sałata lodowa lub inna zielenina","Ogórek świeży","Sos jogurtowy: jogurt naturalny, słodzik, pieprz"],
+ steps:["Chleb opiekamy w tosterze na chrupiąco.","Od razu kładziemy ser na obie kromki i dociskamy, by się lekko stopił.","Na jedną kromkę: sałata i wędlina na przemian, trochę sosu, plastry ogórka. Przykrywamy drugą kromką."],
+ nutri:[{l:"całość",kcal:380,b:22,t:9,w:48}]},
+
+{cat:"Drugie śniadania", name:"Tosty z Mozzarellą", portions:"1 porcja", time:"5 min",
+ ing:["100g chleba żytniego razowego (2 kromki po 50g)","60-65g sera mozzarella light (połowa kulki)","1 łyżeczka oliwy z oliwek","Pomidor lub pomidorki koktajlowe","Bazylia lub zielenina","Przyprawy: sól, pieprz, czosnek granulowany, oregano"],
+ steps:["Chleb opiekamy w tosterze. Mozzarellę osuszamy i kroimy w cienkie plastry.","Na jedną grzankę kładziemy ser, dociskamy. Posypujemy oregano, czosnkiem, pieprzem. Kładziemy pomidora, sól, zieleninę. Drugą grzankę polewamy oliwą, przykrywamy."],
+ nutri:[{l:"całość",kcal:406,b:20,t:13,w:49}]},
+
+{cat:"Drugie śniadania", name:"Tosty z Wędzonym Łososiem", portions:"2 porcje", time:"5 min",
+ ing:["200g chleba żytniego razowego (4 kromki po 50g)","100g wędzonego łososia","Ogórek świeży","Sałata lodowa (lub szpinak, roszponka, rukola)","Chrzan tarty","Sos (str. 60) lub majonez / jogurt grecki","Opcjonalnie: sos sojowy, 2 plastry awokado"],
+ steps:["Chleb opiekamy w tosterze na chrupiąco.","Dolne kromki smarujemy chrzanem, górne sosem. Na dolnych: sałata, łosoś, ogórek, opcjonalnie awokado. Przykrywamy. Łososia można skropić sosem sojowym."],
+ nutri:[{l:"całość",kcal:691,b:38,t:15,w:97},{l:"porcja",kcal:345,b:19,t:8,w:49}]},
+
+{cat:"Drugie śniadania", name:"Twaróg na Słodko", portions:"1 porcja", time:"5 min",
+ ing:["200g twarogu chudego","2 czubate łyżki jogurtu naturalnego","1 łyżka erytrytolu lub ksylitolu","1 łyżeczka konfitury (str. 46) lub 3 łyżki Skyr z jagodami","Ok. 100g borówek lub jagód","15g orzechów włoskich, migdałów lub nerkowców"],
+ steps:["Twaróg przekładamy do miski. Dodajemy jogurt i słodzik, zagniatamy widelcem. Dodajemy konfiturę, mieszamy. Dekorujemy owocami i orzechami."],
+ nutri:[{l:"całość",kcal:385,b:45,t:13,w:31}]},
+
+{cat:"Drugie śniadania", name:"Wysokobiałkowy Shake Czekoladowy", portions:"1 porcja", time:"5 min",
+ ing:["50-60g odżywki białkowej czekoladowej (lub karmelowa, orzechowa)","100-125ml mleka","2 łyżki kakao","1 łyżka erytrytolu lub ksylitolu","Opcjonalnie: dodatkowy słodzik, wanilia, cynamon, kostki lodu"],
+ steps:["Wszystkie składniki blendujemy do ujednolicenia."],
+ nutri:[{l:"całość",kcal:277,b:54,t:4,w:14}]},
+
+{cat:"Dodatki słodkie", name:"Domowa Konfitura", portions:"mała porcja", time:"szybko",
+ ing:["Ok. 200-250g porzeczek lub jeżyn (mogą mrożone)","Kilka łyżek erytrytolu lub ksylitolu (można 1 łyżka syropu/miodu)","Wrzątek"],
+ steps:["Owoce zalewamy niedużą ilością wrzątku, dodajemy słodzik. Gotujemy, mieszając, do odparowania wody i lekkiego zgęstnienia. Najlepiej nie gotować do całkowitego zgęstnienia."],
+ nutri:[{l:"całość",kcal:146,b:3,t:0,w:34},{l:"na 100g",kcal:112,b:2,t:0,w:26}]},
+
+{cat:"Dodatki słodkie", name:"Granola", portions:"ok. 115-120g", time:"szybko",
+ ing:["30g płatków błyskawicznych (owsiane, jaglane, komosa)","10g płatków migdałowych","20g orzechów włoskich","20g suszonych bananów","15g rodzynek","10g wiórków kokosowych","1 mała kostka gorzkiej czekolady"],
+ steps:["Suszone banany mielimy na mąkę. Czekoladę szatkujemy. Do miski: banany, czekolada, wiórki, płatki owsiane, rodzynki.","Migdały i orzechy rozdrabniamy w woreczku. Dodajemy do miski, mieszamy. Podajemy z mlekiem (lub bazą str. 52) i owocami."],
+ nutri:[{l:"całość",kcal:485,b:11,t:27,w:58},{l:"na 100g",kcal:422,b:10,t:23,w:50}]},
+
+{cat:"Dodatki słodkie", name:"Krem Czekoladowy", portions:"do polewania", time:"szybko",
+ ing:["2 łyżki masła orzechowego gładkiego","2 łyżki kakao","1 łyżka erytrytolu lub ksylitolu","2 łyżki syropu klonowego lub 1 łyżka miodu","3 łyżki mleka (może roślinne)"],
+ steps:["Wszystkie składniki mieszamy energicznie rózgą do lepkiej masy. Ilością mleka regulujemy konsystencję.","Najlepszy do omletów, gofrów i naleśników. Wystarczy 1 łyżeczka na porcję."],
+ nutri:[{l:"całość",kcal:407,b:14,t:27,w:33},{l:"na 100g",kcal:313,b:11,t:22,w:25}]},
+
+{cat:"Dodatki słodkie", name:"Krem Owocowo-Waniliowy", portions:"ok. 250g", time:"szybko",
+ ing:["Ok. 100g owoców (jagody, borówki, jeżyny, truskawki, maliny)","1 opakowanie jogurtu Skyr waniliowego (150g)","Słodzik wedle uznania (np. erytrytol)","Ekstrakt z wanilii lub nasiona"],
+ steps:["Owoce blendujemy z wanilią i słodzikiem. Jogurt przekładamy do miski, dodajemy stopniowo zblendowane owoce, mieszamy."],
+ nutri:[{l:"całość",kcal:237,b:16,t:0,w:45},{l:"na 100g",kcal:95,b:7,t:0,w:18}]},
+
+{cat:"Dodatki słodkie", name:"Mus Truskawkowy", portions:"ok. 130g", time:"szybko",
+ ing:["250g truskawek","Słodzik wedle uznania","Opcjonalnie: odrobina wanilii"],
+ steps:["Truskawki blendujemy. Przelewamy do garnka, dodajemy słodzik. Doprowadzamy do wrzenia, zmniejszamy ogień. Gotujemy na wolnym ogniu 1 godzinę (lekko parować, nie bulgotać).","Dosładzamy wedle uznania, można dodać wanilię. Przechowujemy w lodówce."],
+ nutri:[{l:"całość",kcal:80,b:3,t:0,w:20},{l:"na 100g",kcal:62,b:2,t:0,w:15}]},
+
+{cat:"Dodatki słodkie", name:"Polewa Piernikowa", portions:"ok. 200g", time:"szybko",
+ ing:["1 opakowanie jogurtu Skyr waniliowego (150g)","40g rodzynek","Szczypta cynamonu","Opcjonalnie: gorzka czekolada starta na tarce"],
+ steps:["Rodzynki zalewamy wrzątkiem, odstawiamy 10 min, aż zmiękną. Odcedzamy, przekładamy do blendera. Dodajemy Skyr i cynamon. Blendujemy 30-60 s. Można dodać startą czekoladę."],
+ nutri:[{l:"całość",kcal:243,b:16,t:0,w:48},{l:"na 100g",kcal:121,b:8,t:0,w:24}]},
+
+{cat:"Dodatki słodkie", name:"Wysokobiałkowa Baza do Owsianki", portions:"1 porcja", time:"szybko",
+ ing:["1 jogurt Skyr naturalny lub waniliowy (150g)","50ml mleka","1 łyżka erytrytolu lub ksylitolu","Wanilia (1/2 łyżeczki ekstraktu lub nasiona)"],
+ steps:["Wszystkie składniki blendujemy do ujednolicenia. Ilością mleka regulujemy konsystencję. Podajemy z dodatkami: płatki, bakalie, owoce."],
+ note:"Przy dużym posiłku (powyżej 500 kcal) dodaj więcej mleka lub podwój porcję.",
+ nutri:[{l:"całość",kcal:116,b:20,t:0,w:8}]},
+
+{cat:"Dodatki wytrawne", name:"Domowa Wędlina", portions:"1 porcja", time:"szybko",
+ ing:["1/2 piersi z kurczaka (ok. 200-250g)","Przyprawy: sól, pieprz ziołowy, czosnek granulowany, papryka słodka, chili, opcjonalnie kolendra"],
+ steps:["Z piersi odkrawamy polędwiczki, oczyszczamy z tłuszczu, osuszamy.","Mieszamy przyprawy, obtaczamy w nich pierś.","Pieczemy w 180°C na folii 27-30 min. Po wystudzeniu wstawiamy do lodówki, aż mięso da się kroić.","Kroimy w cienkie plastry. Zamiennik wędliny do kanapek, tostów, omletów."],
+ nutri:[{l:"całość",kcal:200,b:44,t:2,w:0},{l:"na 100g",kcal:100,b:22,t:1,w:0}]},
+
+{cat:"Dodatki wytrawne", name:"Grzanki Czosnkowe", portions:"2 porcje", time:"szybko",
+ ing:["100g chleba żytniego razowego (2 kromki po 50g)","2 łyżeczki oliwy lub oleju czosnkowego / masła klarowanego","Czosnek granulowany","Suszone oregano"],
+ steps:["Pieczywo opiekamy w tosterze na chrupiąco.","Każdą kromkę skrapiamy łyżeczką oliwy, rozsmarowujemy. Posypujemy czosnkiem i oregano. Podajemy z twarożkiem (63) lub jako dodatek."],
+ nutri:[{l:"całość",kcal:347,b:8,t:12,w:48},{l:"porcja",kcal:174,b:4,t:6,w:24}]},
+
+{cat:"Dodatki wytrawne", name:"Hummus", portions:"ok. 350g", time:"szybko",
+ ing:["1 puszka ciecierzycy (240g bez zalewy)","2 łyżki oliwy z oliwek","2 czubate łyżki masła orzechowego / migdałowego / tahini","Przyprawy: sól, pieprz, kmin rzymski (1 łyżeczka), czosnek","Opcjonalnie: sok z cytryny"],
+ steps:["Ciecierzycę przelewamy wodą. Do blendera dodajemy resztę składników i 2-3 łyżki wody. Blendujemy do gęstej, kremowej masy. Doprawiamy."],
+ nutri:[{l:"całość",kcal:917,b:34,t:55,w:78},{l:"na 100g",kcal:262,b:10,t:16,w:22}]},
+
+{cat:"Dodatki wytrawne", name:"Pasta Kanapkowa z Fasoli", portions:"porcja", time:"szybko",
+ ing:["1 puszka fasoli białej (240g bez zalewy)","1 łyżka masła orzechowego / migdałowego","2 łyżki oleju czosnkowego lub oliwy czosnkowej","Sól i pieprz","Opcjonalnie: oregano lub majeranek","Listki pietruszki lub kolendry"],
+ steps:["Fasolę przelewamy wodą. Blendujemy z olejem na gęstą masę.","Dodajemy sól, pieprz, masło orzechowe, mieszamy. Podajemy z pieczywem razowym lub grzankami, posypane pietruszką."],
+ nutri:[{l:"całość",kcal:552,b:18,t:33,w:45},{l:"na 100g",kcal:184,b:6,t:11,w:15}]},
+
+{cat:"Dodatki wytrawne", name:"Pasta z Awokado", portions:"porcja", time:"szybko",
+ ing:["1 dojrzałe, miękkie awokado","Przyprawy: sól, pieprz z młynka","Kilka kropel soku z cytryny"],
+ steps:["Dojrzałe awokado obieramy i rozgniatamy widelcem. Dodajemy sok z cytryny, sól i pieprz. Mieszamy. Idealne z tostami żytnimi (56) i jajkiem na półmiękko."],
+ nutri:[]},
+
+{cat:"Dodatki wytrawne", name:"Sos 1000 Wysp", portions:"sos", time:"szybko",
+ ing:["4 łyżki jogurtu greckiego (gęstego)","1 łyżeczka koncentratu pomidorowego","1/2-1 łyżeczka musztardy","2 łyżeczki słodzika (np. erytrytol)","Pieprz","Opcjonalnie: szczypta soli, trochę startej cebuli"],
+ steps:["Wszystkie składniki mieszamy w misce do ujednolicenia. Kaloryczność zbliżona do jogurtu."],
+ nutri:[]},
+
+{cat:"Dodatki wytrawne", name:"Sos Czosnkowo-Chrzanowy", portions:"sos", time:"szybko",
+ ing:["Kilka łyżek jogurtu naturalnego lub roślinnego","1/2 łyżeczki chrzanu na każde 2-3 łyżki jogurtu","1 mały ząbek czosnku lub szczypta granulowanego","Szczypta pieprzu"],
+ steps:["Wszystkie składniki mieszamy do ujednolicenia."],
+ nutri:[]},
+
+{cat:"Dodatki wytrawne", name:"Sos Majonezowy", portions:"sos", time:"szybko",
+ ing:["Kilka łyżek jogurtu naturalnego lub roślinnego","1 łyżka erytrytolu lub ksylitolu (lub 1 łyżeczka miodu)","1/2 łyżeczki musztardy na każde 2-3 łyżki jogurtu","Szczypta pieprzu"],
+ steps:["Wszystkie składniki mieszamy do ujednolicenia."],
+ nutri:[]},
+
+{cat:"Dodatki wytrawne", name:"Tortilla", portions:"1 tortilla", time:"szybko",
+ ing:["75g mąki pszennej lub żytniej typ 500-720 (lub bezglutenowa)","50ml ciepłej wody (bezglutenowa: nieco więcej)","Szczypta soli"],
+ steps:["W misce mieszamy mąkę z solą i wodą. Zagniatamy łyżką, potem w dłoniach 1-2 min na plastyczną masę. W razie potrzeby podsypujemy mąką.","Formujemy kulę, rozwałkowujemy na cienki placek na średnicę patelni ok. 20-23 cm.","Smażymy na suchej, rozgrzanej patelni na średnio-dużym ogniu z dwóch stron, aż się zarumieni i powstaną pęcherzyki. Odwracamy 2-3 razy."],
+ note:"Mąka razowa (2000) lub graham (1850): wałkuj ostrożniej, dłużej podpiekaj, tortilla będzie mniej kształtna.",
+ nutri:[{l:"1 porcja",kcal:275,b:8,t:1,w:57}]},
+
+{cat:"Dodatki wytrawne", name:"Twarożek z Dymką", portions:"1 porcja", time:"szybko",
+ ing:["1 twarożek domowy 150g","Dymka (zielona część)","Sól i pieprz","Opcjonalnie: czerwona papryka i 2 rzodkiewki, drobno poszatkowane"],
+ steps:["Wszystkie składniki mieszamy w misce. Podajemy z grzankami czosnkowymi (56) lub jako dodatek zwiększający białko.","Można podwoić porcję, dodać warzywa i olej czosnkowy, by otrzymać posiłek low carb."],
+ nutri:[]},
+
+{cat:"Szybkie surówki", name:"Mizeria", portions:"surówka", time:"szybko",
+ ing:["1 nieduży ogórek świeży","2-3 łyżki jogurtu naturalnego (może roślinny)","1 łyżeczka erytrytolu lub ksylitolu","Pieprz z młynka"],
+ steps:["Ogórka obieramy i kroimy na małe kawałki. Dodajemy resztę składników, mieszamy, doprawiamy."],
+ nutri:[]},
+
+{cat:"Szybkie surówki", name:"Salsa Meksykańska", portions:"surówka", time:"szybko",
+ ing:["4-5 słodkich pomidorków koktajlowych","1/2 małej cebuli czerwonej","Kawałek dojrzałej czerwonej papryki (ok. 1/3 dużej)","Kilka liści sałaty rzymskiej","Kukurydza z puszki (ok. 1/3 małej puszki)","1 łyżka oliwy z oliwek","1 łyżeczka octu balsamicznego","Sól i pieprz","Opcjonalnie: kolendra lub pietruszka"],
+ steps:["Cebulę kroimy cienko, sałatę szatkujemy, pomidorki na kawałki. Przekładamy do miski, dodajemy resztę składników, mieszamy."],
+ nutri:[]},
+
+{cat:"Szybkie surówki", name:"Salsa Włoska", portions:"surówka", time:"szybko",
+ ing:["1 duży pomidor lub dwa małe","1 mała cebula (czerwona) lub 1/2 dużej","1 łyżka oliwy z oliwek","1 ząbek czosnku lub 1 łyżeczka granulowanego","Listki świeżej bazylii","Sól i pieprz","Odrobina octu balsamicznego"],
+ steps:["Pomidora i cebulę szatkujemy drobno. Dodajemy pozostałe składniki, doprawiamy."],
+ nutri:[]},
+
+{cat:"Szybkie surówki", name:"Surówka z Marchewki", portions:"surówka", time:"szybko",
+ ing:["2 nieduże marchewki","Ćwiartka jabłka","1 płaska łyżeczka erytrytolu lub ksylitolu","Odrobina soku z cytryny lub limonki"],
+ steps:["Marchewkę i obrane jabłko ścieramy na tarce z grubszymi oczkami. Dodajemy pozostałe składniki, mieszamy."],
+ nutri:[]},
+
+{cat:"Szybkie surówki", name:"Tzatziki", portions:"surówka", time:"szybko",
+ ing:["1 nieduży ogórek świeży","3 łyżki jogurtu greckiego (gęstego)","1 mały ząbek czosnku lub 1 łyżeczka granulowanego","Sól, pieprz","Odrobina soku z cytryny lub limonki","Opcjonalnie: mięta lub bazylia, 1 łyżeczka słodzika"],
+ steps:["Ogórka obieramy i szatkujemy bardzo drobno. Dodajemy resztę składników, mieszamy, doprawiamy."],
+ nutri:[]},
+
+{cat:"Napoje", name:"Mojito Lemoniada", portions:"ok. 500ml", time:"szybko",
+ ing:["3-4 limonki","Liście mięty","Erytrytol lub ksylitol","Woda gazowana lub wysokomineralizowana"],
+ steps:["Limonki wyciskamy, przelewamy do dzbanka. Dodajemy słodzik i miętę. Dopełniamy wodą, mieszamy. Dosładzamy wedle uznania."],
+ nutri:[]},
+
+{cat:"Napoje", name:"Napój Pomarańczowy", portions:"ok. 500ml", time:"szybko",
+ ing:["2 duże pomarańcze","1 cytryna lub limonka","Erytrytol lub ksylitol","Woda gazowana lub wysokomineralizowana"],
+ steps:["Owoce wyciskamy, sok przecedzamy. Przelewamy do dzbanka, dodajemy słodzik. Dopełniamy wodą, mieszamy. Dosładzamy wedle uznania."],
+ nutri:[]},
+{cat:"Obiady", name:"Burger Pielgrzyma", portions:"1 kanapka", time:"20 min",
+ ing:["Miękka bułka ok. 60g","75-100g piersi z indyka lub kurczaka","1-2 plastry żółtego sera","1 łyżeczka oliwy z oliwek (lub olej, masło klarowane)","1 łyżeczka chrzanu","1 łyżka konfitury (np. żurawinowej)","Odrobina soku z limonki lub cytryny","1 mała szalotka lub kilka plastrów cebuli, drobno","Kilka listków sałaty lub rukoli","Przyprawy do mięsa: papryka słodka, sól, pieprz ziołowy, chili lub cayenne, mielona kolendra"],
+ steps:["Mięso kroimy na podłużne kawałki i obtaczamy w przyprawach.","Grillujemy na suchej patelni na średnim ogniu lub pieczemy 12-15 minut w 180°C (góra-dół). Czas zależy od grubości.","Gotowe mięso przekładamy do miski, dodajemy 1 łyżeczkę tłuszczu i mieszamy, aż się pokryje.","Konfitura żurawinowa: ok. 100g suszonej żurawiny zalewamy wrzątkiem, czekamy aż zmięknie. Odcedzamy (wody nie wylewamy), blendujemy z 1 łyżką miodu lub syropu klonowego na gładką pastę. Można dodać 2-3 łyżki wody żurawinowej.","Bułkę kroimy na pół, najlepiej nie do końca.","Dół smarujemy chrzanem, posypujemy oregano i czosnkiem granulowanym. Dodajemy cebulę, mięso i ser. Wkładamy do mocno rozgrzanego piekarnika na minutę-dwie, aż ser się roztopi.","Dodajemy 1 łyżkę konfitury, skrapiamy sokiem z limonki, dekorujemy sałatą."],
+ note:"Wege: kurczaka zamień na płaski plaster tofu grillowany na sucho do zarumienienia, potem obtocz w oliwie z przyprawami. Ser pomiń lub użyj wegańskiego.",
+ nutri:[{l:"całość",kcal:459,b:34,t:13,w:40},{l:"w 100 g",kcal:230,b:17,t:7,w:20}]},
+
+{cat:"Obiady", name:"Cajun z Grilla", portions:"2 porcje", time:"20 min (+ marynowanie opcj. 1h)",
+ ing:["300-400g chudego schabu (lub pierś z kurczaka, indyka)","1 łyżeczka papryki słodkiej w proszku","1 łyżeczka papryki wędzonej w proszku","1 łyżeczka suszonego oregano","1 łyżeczka erytrytolu lub ksylitolu","½ łyżeczki mielonego cayenne lub chili","Szczypta-dwie suszonego tymianku","Szczypta czarnego pieprzu","1 mały ząbek czosnku, wyciśnięty lub starty","Trochę cebuli startej, do smaku","1 łyżeczka jasnego sosu sojowego","30ml soku z pomarańczy"],
+ steps:["Marynata: składniki mieszamy w misce do ujednolicenia.","Mięso kroimy na plastry ok. 1 cm, odkrawamy tłuszcz, obtaczamy w marynacie. Można marynować ok. 1h w lodówce, ale nie jest to konieczne.","Smażymy na rozgrzanej patelni bez tłuszczu na średnim ogniu. Schab ok. 3 minuty z każdej strony. Czas zależy od grubości i rodzaju mięsa, uważać żeby nie przesuszyć.","Sos do polania: do pozostałej marynaty dodajemy 1 łyżkę oliwy i 1-2 łyżki soku z pomarańczy. Polewamy mięso. Podajemy z domowymi frytkami."],
+ note:"Wege: mięso zamień na płaskie plastry tofu, można grillować bez marynowania do zarumienienia. Marynatę podgrzej z oliwą i polej tofu.",
+ nutri:[{l:"całość",kcal:548,b:93,t:13,w:5},{l:"na porcję",kcal:274,b:46,t:7,w:3},{l:"z frytkami",kcal:407,b:49,t:9,w:30}]},
+
+{cat:"Obiady", name:"Chili Con Carne", portions:"1 porcja", time:"20 min",
+ ing:["100g mielonej wołowiny (lub mielony drób w wersji lżejszej)","½ średniej cebuli lub spora szalotka","1 ząbek czosnku","1 ostra papryczka średniej wielkości","50g czerwonej fasoli z puszki, bez zalewy","ok. 100g passaty pomidorowej 100%","1 łyżka erytrytolu lub ksylitolu","Mieszanka przypraw: 1,5 łyżki kminu rzymskiego, 1 łyżeczka cayenne lub chili, 1 łyżeczka oregano, 1 płaska łyżeczka słodkiej papryki, szczypta soli i pieprzu, opcjonalnie szczypta cynamonu","2 łyżki oliwy lub oleju kokosowego do smażenia","Opcjonalnie: dymka lub pietruszka"],
+ steps:["Cebulę szatkujemy drobno, czosnek ścieramy, papryczkę kroimy drobno. Smażymy chwilę na średnim ogniu z 2 łyżkami tłuszczu.","Gdy cebula się zeszkli, dodajemy mięso. Rozbijamy łopatką i smażymy kilka minut, aż się zrumieni.","Zmniejszamy ogień, dodajemy passatę, słodzik, fasolę. Gotujemy ok. minutę, aż sos będzie gorący.","Dodajemy łyżeczkę mieszanki przypraw, mieszamy i próbujemy. Doprawiamy do uzyskania pożądanego smaku. Dekorujemy dymką."],
+ note:"Wege: mięso zamień na ugotowaną kaszę gryczaną. Do smażenia dodaj 1-2 drobno skrojone pieczarki i 1 łyżeczkę papryki wędzonej.",
+ nutri:[{l:"całość",kcal:426,b:29,t:29,w:8},{l:"drobiowe",kcal:323,b:28,t:19,w:8},{l:"w 100 g",kcal:142,b:10,t:10,w:3}]},
+
+{cat:"Obiady", name:"Falafele Pieczone", portions:"12 małych kotletów", time:"30 min",
+ ing:["1 puszka ciecierzycy (240g) bez zalewy","1 łyżka siemienia lnianego","Drobno posiekana natka pietruszki (lub kolendra, bazylia, oregano)","1 łyżeczka słodzika (erytrytol lub ksylitol zmielony)","1 łyżeczka kminu rzymskiego (lub pięć smaków, garam masala)","1 łyżeczka chili lub cayenne","1 łyżeczka czosnku granulowanego","Szczypta soli i pieprz z młynka","3 łyżki bułki tartej lub przemielonych płatków","2 łyżki oliwy z oliwek","Sos czosnkowo-chrzanowy: 4 łyżki jogurtu naturalnego lub roślinnego, 1 łyżeczka słodzika, 1-2 łyżeczki chrzanu, 1 łyżeczka czosnku granulowanego lub 1 ząbek wyciśnięty, pieprz z młynka"],
+ steps:["Siemię lniane zalewamy wrzątkiem i odstawiamy na kilka minut.","Ciecierzycę odsączamy na sitku. Blendujemy z siemieniem i oliwą. Przekładamy do wysokiej miski.","Dodajemy pietruszkę, słodzik, przyprawy, bułkę tartą. Mieszamy i zagniatamy. Formujemy płaskie kotlety, układamy na papierze do pieczenia.","Pieczemy 15-20 minut w 180°C. Po wyjęciu lekko studzimy.","Sos: składniki mieszamy w misce. Podajemy z falafelami."],
+ note:"Przepis bezmięsny. Wartości na porcję dotyczą jednego małego kotleta.",
+ nutri:[{l:"całość",kcal:693,b:24,t:28,w:87},{l:"na porcję",kcal:58,b:2,t:2,w:7},{l:"w 100 g",kcal:231,b:8,t:9,w:29}]},
+
+{cat:"Obiady", name:"Fit Bolognese", portions:"1 porcja", time:"20 min",
+ ing:["100g mielonego mięsa (u autora drobiowe)","50g makaronu spaghetti","3 łyżki passaty pomidorowej","1 łyżka mleka (może być roślinne)","1-2 łyżeczki erytrytolu lub ksylitolu","½ niedużej marchewki","½ cebuli","1 łyżka oliwy z oliwek do smażenia","Przyprawy: sól, pieprz, papryka wędzona, czosnek granulowany","Opcjonalnie: parmezan lub inny ser, bazylia lub oregano"],
+ steps:["Makaron gotujemy wg opakowania.","Cebulę szatkujemy drobno. Na głębokiej patelni rozgrzewamy oliwę, wrzucamy cebulę na 30 sekund, dodajemy mięso. Smażymy mieszając, aż zmieni kolor.","Dodajemy przyprawy. Przy drobiowym mięsie co najmniej 1 łyżeczkę papryki wędzonej. Smażymy dalej.","Dodajemy słodzik, passatę i mleko. Mieszamy, próbujemy, doprawiamy. Trzymamy kilka minut, aż sos zgęstnieje. Marchewkę można zagotować z makaronem lub dorzucić na patelnię.","Makaron odcedzamy, przekładamy do miski, na to mięso z warzywami. Dekorujemy ziołami i serem."],
+ note:"Wege: mięso zamień na ugotowaną kaszę gryczaną. Do smażenia dodaj 1-2 pieczarki i 1 łyżeczkę papryki wędzonej, można więcej warzyw i przypraw.",
+ nutri:[{l:"całość",kcal:399,b:33,t:13,w:38},{l:"w 100 g",kcal:133,b:11,t:4,w:13}]},
+
+{cat:"Obiady", name:"Fitburger Drobiowy", portions:"1 burger", time:"15 min",
+ ing:["1 miękka bułka ok. 60-75g","100g piersi z kurczaka lub indyka w płaskich kawałkach","Przyprawy do mięsa: pieprz z młynka, papryka słodka, papryka wędzona","Warzywa: sałata, cebula, pomidor","1 łyżka oliwy z oliwek (lub olej lniany, rzepakowy, masło klarowane)","Sos BBQ: 1 łyżeczka syropu klonowego lub miodu, szczypta papryki wędzonej, odrobina ciemnego sosu sojowego, pieprz z młynka"],
+ steps:["Mięso kroimy w płaskie kawałki i obtaczamy w przyprawach. Grillujemy na rozgrzanej patelni bez tłuszczu z dwóch stron do zarumienienia, uważając żeby nie przesuszyć.","Bułkę kroimy na pół i podpiekamy w piekarniku lub na suchej patelni od środka.","Składniki sosu mieszamy w misce. Mięso przekładamy do sosu i obtaczamy.","Obie części bułki nacieramy od środka tłuszczem. Dodajemy warzywa i mięso."],
+ note:"Wege: kurczaka zamień na płaski plaster tofu grillowany na sucho do zarumienienia, potem obtocz w oliwie z przyprawami.",
+ nutri:[{l:"całość",kcal:408,b:28,t:11,w:45},{l:"w 100 g",kcal:163,b:11,t:4,w:18}]},
+
+{cat:"Obiady", name:"Klopsy Drobiowe", portions:"2 porcje (10-12 klopsów)", time:"30 min",
+ ing:["200g mielonego mięsa drobiowego","2 łyżki płatków błyskawicznych (owsiane, gryczane, orkiszowe, z komosy) lub bułka tarta","Drobno posiekana pietruszka lub kolendra, do smaku","Oliwa z oliwek lub masło klarowane","Przyprawy: 2 łyżeczki papryki słodkiej, 2 łyżeczki majeranku, 1 łyżeczka pieprzu ziołowego, szczypta soli i pieprzu, ½ łyżeczki cayenne lub chili, ½ ząbka czosnku","Sos pomidorowy: 5-6 łyżek passaty, 1 łyżeczka słodkiej papryki, ½ ząbka czosnku, 1 łyżka oregano, szczypta pieprzu, 1-2 łyżeczki erytrytolu, opcjonalnie 1 łyżeczka oliwy"],
+ steps:["Płatki przemielamy lekko w blenderze (nie na mąkę, mają być trochę drobniejsze od otrębów).","Mięso, płatki, pietruszkę i przyprawy mieszamy w misce i zagniatamy. Lepimy 10-12 okrągłych klopsów.","Pieczemy na folii 15 minut w 200°C (góra-dół).","Po upieczeniu przekładamy do miski, dodajemy 1-2 łyżeczki oliwy lub masła klarowanego i mieszamy. Podajemy z makaronem spaghetti, sosem pomidorowym i ziołami. Makaron można zamienić na kaszę gryczaną."],
+ note:"Wartości na porcję obejmują ⅓ klopsów wraz z 75g makaronu lub kaszy, sosem i oliwą.",
+ nutri:[{l:"całość",kcal:383,b:53,t:12,w:14},{l:"na porcję",kcal:457,b:31,t:7,w:70},{l:"w 100 g",kcal:152,b:10,t:2,w:23}]},
+
+{cat:"Obiady", name:"Kurczak Gong Bao", portions:"2 porcje (ok. 500g)", time:"25 min",
+ ing:["450-500g piersi z kurczaka","Marynata: 1 łyżeczka cayenne lub chili, 1 łyżeczka sosu sojowego (najlepiej ciemnego)","1 ząbek czosnku starty lub 1 łyżeczka czosnku granulowanego","Mały kawałek imbiru startego lub 1 łyżeczka imbiru w proszku","½ średniej cebuli, drobno","Ostra papryczka, drobno, do smaku","½ łyżeczki octu (ryżowy, winny, balsamiczny)","1 łyżka mąki ziemniaczanej lub tapioki","1 łyżeczka ciemnego sosu sojowego","1 łyżeczka słodzika","ok. 25g orzechów ziemnych (lub nerkowce, migdały)","Dymka (zielona część)","Kilka łyżek wrzątku","3 łyżki oleju kokosowego, oliwy lub masła klarowanego"],
+ steps:["Mięso kroimy na małe kawałki, osuszamy. Mieszamy z cayenne i sosem sojowym.","Rozgrzewamy tłuszcz w woku lub głębokiej patelni i smażymy kurczaka na dużym ogniu, mieszając, aż zmieni kolor.","Dodajemy cebulę, imbir, czosnek, papryczkę. Smażymy do miękkości mięsa. W trakcie dodajemy ocet, słodzik, sos sojowy, trochę dymki.","Gdy kurczak gotowy, dodajemy wrzątek i mąkę ziemniaczaną, mieszamy aż sos zgęstnieje. Wyłączamy ogień, dodajemy resztę dymki i orzechy. Podajemy z ryżem i surówką z białej kapusty."],
+ note:"Wege: kurczaka zamień na tofu lub tempeh. Wartości z ryżem dotyczą ⅓ całości i 50g ryżu.",
+ nutri:[{l:"całość",kcal:903,b:108,t:46,w:8},{l:"na porcję",kcal:452,b:54,t:23,w:4},{l:"z ryżem",kcal:486,b:39,t:15,w:44}]},
+
+{cat:"Obiady", name:"Leczo z Kurczakiem", portions:"2 porcje", time:"25 min",
+ ing:["ok. 300g piersi z kurczaka","½ czerwonej papryki","½ zielonej papryki","½ średniej cebuli","⅓ średniej cukinii","Na sos: passata pomidorowa, wrzątek, mąka ziemniaczana, 1 łyżka słodzika","Przyprawy: po 1 łyżeczce papryki słodkiej, chili lub cayenne, czosnku granulowanego, pieprzu ziołowego, szczypta soli i pieprz z młynka","3 łyżki oliwy z oliwek lub masła klarowanego"],
+ steps:["Warzywa kroimy na małe kawałki.","Kurczaka kroimy na małe kawałki, grillujemy na rozgrzanej patelni na średnim ogniu, aż zmieni kolor.","Przekładamy do garnka, dodajemy warzywa, ½ szklanki wrzątku, przyprawy, słodzik i 10 łyżek passaty. Doprowadzamy do wrzenia, zmniejszamy ogień, gotujemy ok. 10 minut z uchyloną pokrywką. Kto woli miękkie warzywa, przegotowuje je wcześniej.","Dodajemy 1 łyżkę mąki ziemniaczanej, mieszamy do zgęstnienia. Dodajemy oliwę lub masło. Podajemy z domowymi bułkami lub pieczywem."],
+ note:"Wege: kurczaka zamień na tofu lub tempeh, grillowane na sucho do zarumienienia. Wartości z pieczywem dotyczą ½ porcji i 60-70g pieczywa.",
+ nutri:[{l:"całość",kcal:585,b:69,t:30,w:0},{l:"na porcję",kcal:293,b:35,t:15,w:0},{l:"z pieczywem",kcal:476,b:40,t:16,w:38}]},
+
+{cat:"Obiady", name:"Naleśniki a'la Lasagne", portions:"6 naleśników", time:"40 min",
+ ing:["Ciasto: 120g mąki (uniwersalna typ 500, bezglutenowa, ryżowa, pełnoziarnista), 2 jaja (L), 200ml mleka, 200ml wody gazowanej, oliwa lub olej kokosowy do smażenia","Farsz: 200g mielonej wołowiny (lub drób + papryka wędzona), 1 spora cebula, ok. 10 łyżek passaty, 1 łyżka słodzika, przyprawy (czosnek granulowany, sól, pieprz, oregano, papryka słodka, szczypta chili), 2 łyżki oliwy lub oleju kokosowego","Dodatkowo: ser do zapiekania (mozzarella, 1 plaster na naleśnik), zioła","Szybki sos beszamelowy: 5 łyżek jogurtu, 2 łyżki bezsmakowego oleju lub rafinowanej oliwy, pieprz, szczypta gałki muszkatołowej, opcjonalnie szczypta soli"],
+ steps:["Masa naleśnikowa: jaja, mleko, wodę gazowaną i mąkę blendujemy do ujednolicenia.","Smażymy 6 naleśników na średnim ogniu, smarując patelnię odrobiną tłuszczu. Po każdym strząsamy resztki, przed kolejnym dodajemy tłuszcz i rozsmarowujemy pędzlem.","Farsz: na patelni smażymy mięso z drobno skrojoną cebulą.","Dodajemy passatę, przyprawy, słodzik. Mieszamy, próbujemy, doprawiamy.","Gdy sos zgęstnieje, przekładamy farsz na naleśniki i składamy w ćwiartki. Można obsmażyć dla chrupkości.","Na każdy naleśnik kładziemy plaster sera, zapiekamy w 220°C do roztopienia. Polewamy beszamelem, posypujemy ziołami."],
+ note:"Wege: mięso zamień na ugotowaną kaszę gryczaną z 1-2 pieczarkami i papryką wędzoną. Wartości drobiowe: 236 kcal na porcję.",
+ nutri:[{l:"całość",kcal:1621,b:105,t:85,w:103},{l:"na porcję",kcal:270,b:17,t:14,w:17},{l:"drobiowe",kcal:236,b:17,t:11,w:17}]},
+
+{cat:"Obiady", name:"Naleśniki z Kurczakiem i Szpinakiem", portions:"3 naleśniki", time:"30 min",
+ ing:["Ciasto: 1 jajo (L), 200ml mleka (może roślinne), 60g mąki (pszenna, żytnia, orkiszowa, kukurydziana, gryczana, jaglana, bezglutenowa), oliwa lub olej kokosowy","Farsz: 150g piersi z kurczaka lub indyka, przyprawy (pieprz, sól, oregano, czosnek), ok. 10g listków szpinaku, mały kawałek cebuli, 2 łyżki jogurtu naturalnego (lub roślinny, mleczko kokosowe), odrobina mąki ziemniaczanej, 1 łyżeczka oliwy lub oleju kokosowego"],
+ steps:["Naleśniki: składniki blendujemy do ujednolicenia. Smażymy na średnim ogniu z dwóch stron, czyszcząc patelnię przed każdym. Odkładamy na ręcznik.","Farsz: kurczaka kroimy bardzo drobno, szpinak szatkujemy. Na 1 łyżeczce tłuszczu smażymy kurczaka, aż zmieni kolor.","Dodajemy przyprawy, potem cebulę i szpinak. Smażymy, aż szpinak zmięknie, a kurczak się dosmaży.","Zmniejszamy ogień, dodajemy jogurt i odrobinę mąki ziemniaczanej, mieszamy do zgęstnienia.","Farsz przekładamy na naleśniki, składamy w ćwiartki i obsmażamy z dwóch stron lub podpiekamy."],
+ note:"Wege: kurczaka zamień na tofu lub tempeh.",
+ nutri:[{l:"całość",kcal:682,b:53,t:28,w:51},{l:"na porcję",kcal:227,b:18,t:9,w:17},{l:"w 100 g",kcal:136,b:11,t:6,w:10}]},
+
+{cat:"Obiady", name:"Pasta Alfredo", portions:"1 porcja", time:"20 min",
+ ing:["75g makaronu (oryginalnie fettuccine, może być dowolny)","30g żółtego sera","50ml mleka (może roślinne)","5-6 pomidorków koktajlowych","Odrobina oliwy z oliwek","1-2 łyżki świeżego tymianku (lub inne świeże zioła)","1 łyżeczka suszonego oregano","Szczypta gałki muszkatołowej lub ½ łyżeczki czosnku granulowanego","Szczypta soli, pieprz z młynka"],
+ steps:["Pomidorki kroimy na pół i pieczemy w 200°C ok. 10-12 minut.","Makaron gotujemy al dente i odcedzamy.","Na głęboką patelnię wlewamy 50ml mleka, podgrzewamy. Dodajemy makaron, starty ser, zioła, przyprawy i sól. Mieszamy, aż ser się stopi i powstanie gęsty sos.","Przekładamy na talerz, na wierzch upieczone pomidorki, opcjonalnie kropla oliwy."],
+ note:"Wege: ser zastąp wegańskim na bazie oleju kokosowego i skrobi, mleko dowolnym roślinnym.",
+ nutri:[{l:"całość",kcal:384,b:20,t:10,w:58},{l:"w 100 g",kcal:192,b:10,t:5,w:29}]},
+
+{cat:"Obiady", name:"Penne All'arrabbiata", portions:"1 porcja", time:"15 min",
+ ing:["100g makaronu (np. penne)","3 łyżki passaty pomidorowej","Przyprawy: szczypta soli, pieprz z młynka, 1 łyżeczka czosnku granulowanego, 3 szczypty oregano","1 łyżka słodzika","1 łyżka oliwy z oliwek (lub olej lniany, rzepakowy)","10g startego parmezanu lub innego żółtego sera","Ostra papryczka, do smaku","Do dekoracji: oregano lub bazylia"],
+ steps:["Makaron gotujemy wg opakowania, dodając drobno skrojoną papryczkę. Odcedzamy.","Wersja na szybko: dodajemy passatę, przyprawy, słodzik, oliwę. Mieszamy, posypujemy serem i ziołami.","Wersja tradycyjna: na patelni smażymy papryczkę (można z odrobiną cebuli), dodajemy passatę, przyprawy, słodzik, gotujemy aż gorące.","Dodajemy makaron do sosu, mieszamy, przekładamy na talerz. Dekorujemy parmezanem i ziołami."],
+ nutri:[{l:"całość",kcal:469,b:18,t:13,w:75},{l:"w 100 g",kcal:187,b:7,t:5,w:30}]},
+
+{cat:"Obiady", name:"Pierogi Ruskie z Pieca", portions:"12 sztuk", time:"60 min (+ wyrastanie)",
+ ing:["Ciasto: 400g mąki uniwersalnej typ 500, 1,5-2 łyżeczki drożdży instant, 250ml ciepłej wody, 2-3 solidne szczypty soli","Farsz: 500g ziemniaków (po obraniu), 150g twarogu chudego, 2 cebule drobno, 3 łyżki oliwy z oliwek, pieprz i sól","Do posmarowania: 1 jajo rozbełtane"],
+ steps:["Ciasto: składniki mieszamy i zagniatamy w misce, potem w dłoniach 1-2 minuty, aż będzie plastyczne i nie lepi się. Odstawiamy pod ścierką do wyrośnięcia.","Farsz: ziemniaki kroimy, gotujemy do miękkości, odcedzamy, rozgniatamy na puree i studzimy. Mieszamy z twarogiem na gładko.","Cebulę szatkujemy drobno, smażymy na oliwie aż zmieni kolor, dodajemy do masy. Doprawiamy solą i pieprzem.","Ciasto dzielimy na porcje, wałkujemy owalne placki, podsypując mąką.","Nakładamy farsz, zwijamy, sklejamy brzegi palcami i widelcem. Nie nakładamy za dużo, lekko spłaszczamy.","Układamy na papierze, smarujemy jajkiem (oprócz spodu). Pieczemy 25 minut w 200°C (góra-dół).","Najlepsze ciepłe. Farsz po upieczeniu bardzo gorący, uważać żeby się nie oparzyć."],
+ nutri:[{l:"całość",kcal:2287,b:83,t:37,w:397},{l:"na porcję",kcal:191,b:7,t:3,w:33},{l:"w 100 g",kcal:152,b:6,t:2,w:26}]},
+
+{cat:"Obiady", name:"Pierś z Grilla w Sosie Hoisin", portions:"2 porcje (ok. 500g)", time:"25 min",
+ ing:["ok. 450g piersi z kurczaka","Marynata: po ½ łyżeczki mielonego imbiru i czosnku granulowanego, 1 łyżeczka ciemnego sosu sojowego","2 łyżki rafinowanego oleju kokosowego (lub rafinowana oliwa, masło klarowane)","Warzywa: dymka, sezam, groszek strączkowy lub fasolka szparagowa lub zielona papryka","Sos hoisin: 1 łyżka powideł śliwkowych (lub syrop klonowy, miód), 1 łyżeczka ciemnego sosu sojowego, 50ml wrzątku, 1 łyżeczka mąki ziemniaczanej, po szczypcie mielonego imbiru, czosnku i chili, opcjonalnie kilka kropel oleju sezamowego"],
+ steps:["Mięso kroimy na cienkie plastry, mieszamy z marynatą w misce.","Grillujemy na rozgrzanej patelni bez tłuszczu na średnim ogniu, obracając kawałki.","Gdy zmienią kolor, trzymamy jeszcze 30-60 sekund, dodajemy olej, trochę dymki i składniki sosu. Mieszamy, dodajemy mąkę ziemniaczaną, mieszamy do zgęstnienia. Groszek można grillować z kurczakiem lub zagotować osobno.","Przekładamy na talerze, dekorujemy dymką i sezamem. Podajemy z ryżem."],
+ note:"Wege: kurczaka zamień na tofu lub tempeh. Wartości z ryżem dotyczą ⅓ całości i 50g ryżu.",
+ nutri:[{l:"całość",kcal:815,b:104,t:25,w:34},{l:"na porcję",kcal:407,b:52,t:12,w:17},{l:"z ryżem",kcal:456,b:37,t:8,w:52}]},
+
+{cat:"Obiady", name:"Pizza Diavola", portions:"4 porcje (1 mała pizza)", time:"30 min",
+ ing:["Ciasto: 100g mąki (uniwersalna typ 500 lub bezglutenowa), 60ml ciepłej wody, solidna szczypta soli","Dodatki: 30-35g chudej wędliny drobiowej (lub pieczony kurczak, indyk), ok. 50g sera żółtego (3 plastry), kilka cienkich plastrów cebuli, 1 średnia pieczarka, 1 ostra papryczka, 3-4 plastry pomidora","Sos pomidorowy: 3 łyżki passaty, 1-2 łyżeczki erytrytolu, szczypta cayenne lub chili, szczypta oregano, szczypta czosnku granulowanego"],
+ steps:["Przygotowujemy dodatki: kroimy cienko pomidora, wędlinę, cebulę, pieczarkę, mieszamy sos w misce.","Spód: mąkę mieszamy z ciepłą wodą, zagniatamy łyżką, potem w dłoniach. Rozwałkowujemy na cienki placek.","Zawijamy brzegi tworząc kwadrat. Smażymy na suchej patelni na średnio-dużym ogniu z dwóch stron do zarumienienia i pęcherzyków. Piekarnik rozgrzewamy do maksimum.","Na placek dajemy ser (2 plastry) i cebulę, posypujemy pieprzem i ziołami. Zapiekamy do rozpuszczenia sera.","Dodajemy wędlinę, pieczarkę, papryczkę, opcjonalnie pomidory. Pieczemy 4 minuty.","Rozprowadzamy sos, sypiemy pozostały ser, zapiekamy ponownie. Posypujemy oregano i pieprzem."],
+ note:"Wege: ser zastąp wegańskim na bazie oleju kokosowego i skrobi. Wędlinę pomiń, dodaj więcej pieczarek lub użyj wegańskiej.",
+ nutri:[{l:"całość",kcal:577,b:30,t:15,w:77},{l:"na porcję",kcal:144,b:8,t:4,w:19},{l:"w 100 g",kcal:165,b:9,t:4,w:22}]},
+
+{cat:"Obiady", name:"Ramen Wegański", portions:"2 nieduże porcje", time:"75 min",
+ ing:["Wywar: 1 litr wody, włoszczyzna (2 marchewki, kawałek selera, pora, kapusty, 1 cebula, 1 pietruszka, natka), 2cm imbiru, 1 łyżka sosu sojowego, 2 arkusze nori, kilka pieczarek, ząbek czosnku","Sos: 1 łyżka mleka sojowego, 1 płaska łyżeczka masła orzechowego gładkiego lub tahini (lub miso), 1 łyżeczka jasnego sosu sojowego, 1 łyżka oleju rafinowanego, kilka kropel octu, szczypta mielonego imbiru, opcjonalnie olej sezamowy, mirin lub sake","Dodatki: 100g makaronu ramen (lub połamane spaghetti), 100g tofu naturalnego, 2 spore pieczarki, sos teriyaki (1 łyżeczka ciemnego sosu sojowego, 1 łyżka syropu klonowego, szczypta imbiru), warzywa do wyboru (kukurydza, marchewka, groszek, kimchi, bambus, kiełki), dymka i sezam do dekoracji"],
+ steps:["Wywar: wodę zagotowujemy, dodajemy umyte i skrojone warzywa, czosnek, imbir, nori, sos sojowy i pieczarki. Gotujemy godzinę z uchyloną pokrywką, potem odcedzamy.","Sos: składniki mieszamy rózgą, dodajemy wywar, mieszamy i próbujemy, doprawiamy. Całość przed podaniem bardzo gorąca.","Tofu i grzyby kroimy w plastry, grillujemy na rozgrzanej patelni do zarumienienia. Mieszamy z sosem teriyaki, odcedzamy.","Makaron gotujemy wg opakowania, przekładamy do talerzy, zalewamy zupą. Dodajemy tofu, grzyby i warzywa. Dekorujemy dymką i sezamem."],
+ note:"Wersja wegetariańska: zamiast tofu 2 jaja gotowane na półmiękko. Porcja: zupa, 50g makaronu, 50g tofu, łyżka kukurydzy.",
+ nutri:[{l:"całość",kcal:655,b:29,t:19,w:93},{l:"na porcję",kcal:328,b:15,t:9,w:46},{l:"w 100 g",kcal:218,b:10,t:6,w:31}]},
+
+{cat:"Obiady", name:"Szybka Pomidorówka", portions:"1 duża lub 2 małe porcje", time:"20 min",
+ ing:["400ml bulionu warzywnego (świeży lub ½ kostki + 400ml wody)","200ml passaty pomidorowej","1 ząbek czosnku, na kawałki","1 szalotka lub mały kawałek cebuli","2 ziarna ziela angielskiego","2 listki laurowe","Pieprz czarny mielony, do smaku","1 łyżka oliwy z oliwek"],
+ steps:["Do zagotowanego bulionu dodajemy passatę, czosnek, cebulę, liść laurowy, ziele angielskie i pieprz. Mieszamy. Gotujemy 15 minut, mieszając co 2-3 minuty. Zupa ma parować, ale nie bulgotać.","Odcedzamy na sitku, dodajemy oliwę i mieszamy. Doprawiamy. Podajemy z makaronem, ryżem lub ziemniakami."],
+ note:"Wartość całość dotyczy samej zupy. Na każdą porcję 50g makaronu (waga przed ugotowaniem).",
+ nutri:[{l:"całość",kcal:163,b:3,t:9,w:18}]},
+
+{cat:"Obiady", name:"Tajskie Curry", portions:"2 porcje (ok. 500g)", time:"25 min",
+ ing:["300g piersi z kurczaka lub indyka","Marynata: po ½ łyżeczki mielonego imbiru i chili lub cayenne","100g zielonej fasolki szparagowej (mrożoną przelać ciepłą wodą)","½ średniej cebuli","Opcjonalnie: 1 łyżeczka sosu sojowego","Sos curry: ostra papryczka do smaku, ½ średniej cebuli, 1 ząbek czosnku i kawałek imbiru startego, szczypta soli i pieprzu, trochę startej skórki z limonki, 200ml mleczka kokosowego (min. 12%), opcjonalnie kolendra, ½ łyżeczki mielonej kolendry, szczypta kminu rzymskiego"],
+ steps:["Kurczaka kroimy na równe kawałki, obtaczamy w imbirze i chili.","Sos curry: wszystkie składniki blendujemy do ujednolicenia.","Na rozgrzanej patelni lub woku grillujemy kurczaka bez tłuszczu, aż zmieni kolor.","Dodajemy fasolkę, cebulę, sos curry, opcjonalnie sos sojowy. Można dodać papryczkę i skórkę z limonki. Mieszamy.","Gotujemy ok. 5 minut, mieszając. Można dodać 1 łyżkę mąki ziemniaczanej dla zagęszczenia. Podajemy z ryżem."],
+ note:"Wege: kurczaka zamień na tofu lub tempeh. Wartości z ryżem dotyczą ⅓ całości i 50g ryżu.",
+ nutri:[{l:"całość",kcal:783,b:72,t:51,w:3},{l:"na porcję",kcal:391,b:36,t:25,w:2},{l:"z ryżem",kcal:446,b:27,t:17,w:42}]},
+
+{cat:"Obiady", name:"Tikka Masala", portions:"2 porcje (ok. 500-600g)", time:"40 min",
+ ing:["400-450g piersi z kurczaka lub indyka","Przyprawy do mięsa: 1 łyżeczka papryki słodkiej, 1 łyżeczka kminu rzymskiego, 1 łyżeczka czosnku granulowanego, 1 łyżeczka chili lub cayenne, szczypta soli, szczypta mielonego imbiru","Sos: ⅓ średniej cebuli, 1 łyżeczka czosnku granulowanego lub 1 ząbek, szczypta imbiru, 1 łyżeczka kminu rzymskiego lub garam masala, 4 łyżki jogurtu naturalnego lub roślinnego, 2 łyżki passaty, 1 łyżka erytrytolu, sól i pieprz, szczypta mielonej kolendry, 2 łyżki masła klarowanego lub bezzapachowy olej"],
+ steps:["Mięso kroimy na 3-4 duże kawałki, odkrawamy tłuszcz, obtaczamy w przyprawach. Pieczemy na folii ok. 25 minut w 180°C (góra-dół).","Sos: jogurt, passatę, cebulę, czosnek, przyprawy i słodzik blendujemy. Przelewamy na wysoką patelnię. Sos ma być gotowy zanim mięso się upiecze.","Upieczone mięso kroimy na kawałki ok. 3 cm. Do sosu dodajemy masło klarowane, podgrzewamy. Dodajemy mięso, mieszamy i obtaczamy. Nie podgrzewamy za długo. Można dodać mąkę ziemniaczaną dla zagęszczenia.","Przekładamy do misek, dekorujemy kolendrą lub kozieradką i pieprzem."],
+ note:"Wege: kurczaka zamień na tofu lub tempeh, grillowane do zarumienienia, marynatę pomiń. Wartości z ryżem dotyczą ⅓ całości i 50g ryżu.",
+ nutri:[{l:"całość",kcal:676,b:107,t:23,w:3},{l:"na porcję",kcal:338,b:53,t:11,w:2},{l:"z ryżem",kcal:410,b:38,t:8,w:42}]},
+{cat:"Fast food", name:"Bułki do Burgerów", portions:"3 bułki", time:"90 min (z wyrastaniem)",
+ ing:["150g mąki uniwersalnej typ 450-550 (lub bezglutenowa mieszanka do wypieków)","Solidna szczypta soli","1 łyżeczka drożdży instant","100ml ciepłej wody (bezglutenowa 125ml)","Do posmarowania i posypania: 1 żółtko, 1 łyżeczka mleka, ziarna sezamu"],
+ steps:["Mąkę mieszamy z drożdżami i solą, dolewamy ciepłą wodę. Zagniatamy łyżką, potem w dłoniach 1-2 minuty. Wkładamy do natłuszczonej miski, posypujemy mąką, nakrywamy ścierką, odstawiamy w ciepłe miejsce na 30-60 minut.","Wyrośnięte ciasto dzielimy na 3 porcje, formujemy kulki, rozpłaszczamy na placki o średnicy 10-12cm na papierze posypanym mąką.","Smarujemy delikatnie olejem, nakrywamy folią, odstawiamy na 30 minut.","Żółtko mieszamy z łyżeczką mleka, smarujemy placki pędzlem, posypujemy obficie sezamem.","Pieczemy 15 minut w 200°C. Od razu po wyjęciu przykrywamy ręcznikiem i trzymamy pod przykryciem 1-2 godziny."],
+ nutri:[{l:"całość",kcal:549,b:15,t:2,w:114},{l:"na porcję",kcal:183,b:5,t:1,w:38},{l:"w 100 g",kcal:261,b:7,t:1,w:54}]},
+
+{cat:"Fast food", name:"Bułka Pita", portions:"1 chlebek na 2 porcje", time:"60 min (z wyrastaniem)",
+ ing:["ok. 150g mąki zbożowej typ 450-550 (lub bezglutenowa mieszanka)","1 łyżeczka drożdży instant","100ml ciepłej wody (bezglutenowa 125ml)","Szczypta soli"],
+ steps:["Mąkę mieszamy z drożdżami i solą, dolewamy ciepłą wodę. Zagniatamy łyżką, potem w dłoniach 1-2 minuty, aż ciasto będzie plastyczne. Wkładamy do natłuszczonej miski, posypujemy mąką, nakrywamy ścierką, odstawiamy na 30-60 minut.","Wyrośnięte ciasto zagniatamy raz jeszcze, wałkujemy na owalny placek ok. 22-25cm na 15-17cm.","Przekładamy na blaszkę posypaną mąką, pieczemy 15 minut w 200°C. Pita ma wyrosnąć i lekko się zarumienić. Studzimy.","Po wystudzeniu kroimy ostrożnie na dwie części."],
+ note:"Baza do kebaba. Można przekroić od razu po wyjęciu, ale uważać żeby się nie poparzyć.",
+ nutri:[]},
+
+{cat:"Fast food", name:"Burrito", portions:"4 małe porcje", time:"20 min",
+ ing:["2 tortille (przepis w tym zbiorze)","ok. 100g mielonego mięsa (drobiowe w wersji lżejszej lub wołowe)","2-3 łyżki fasoli z puszki","Mały kawałek zielonej papryki, drobno","Mały kawałek cebuli, drobno","1 łyżeczka oliwy lub oleju kokosowego do smażenia","Sos: 1-2 łyżki passaty, 1 łyżka jogurtu naturalnego lub roślinnego, 1 łyżeczka cayenne lub chili, 1 łyżeczka papryki wędzonej (wersja drobiowa i wegańska), szczypta soli i pieprzu, oregano, 2 łyżeczki erytrytolu","Dodatki: żółty ser w słupkach, ½ awokado w plastrach, ugotowany ryż, kolendra"],
+ steps:["Na rozgrzanym tłuszczu smażymy mięso, mieszając. Gdy zmieni kolor, dodajemy paprykę i cebulę. Smażymy aż cebula się zeszkli.","Dodajemy fasolę i składniki sosu. Smażymy 2 minuty, aż woda odparuje i sos zgęstnieje.","Tortille rozkładamy na folii aluminiowej. Na środku farsz, awokado, ser i inne dodatki. Składamy boki i zwijamy w rulon. Owijamy folią. Kroimy każdą tortillę na pół, dając cztery porcje."],
+ note:"Wege: mięso zamień na ugotowaną kaszę gryczaną. Wartości dla wersji drobiowej z awokado.",
+ nutri:[{l:"całość",kcal:861,b:41,t:20,w:126},{l:"na porcję",kcal:215,b:10,t:5,w:32},{l:"w 100 g",kcal:172,b:8,t:4,w:25}]},
+
+{cat:"Fast food", name:"Calzone", portions:"2 porcje", time:"50 min (z wyrastaniem)",
+ ing:["Ciasto: 150g mąki pszennej lub żytniej typ 500-720 (lub bezglutenowa), 1 łyżeczka drożdży instant, 100ml ciepłej wody, szczypta soli, opcjonalnie czosnek granulowany","Farsz: ok. 70g chudej wędliny drobiowej (lub pierś z kurczaka, indyka w paskach), przyprawy (pieprz, sól, czosnek granulowany, papryka słodka, oregano), 50g sera żółtego (mozzarella), 1 średnia pieczarka, mały kawałek cebuli, ½ ostrej papryczki","Ziołowy sos pomidorowy (przepis w tym zbiorze)","Opcjonalnie: świeża bazylia lub oregano"],
+ steps:["Ciasto: mąkę mieszamy z drożdżami i solą, dodajemy ciepłą wodę. Zagniatamy łyżką, potem natłuszczonymi dłońmi 1-2 minuty. Odstawiamy do wyrośnięcia na 30-40 minut.","Wyrośnięte ciasto zagniatamy i rozwałkowujemy na owalny placek, niezbyt cienki. Przekładamy na blaszkę posypaną mąką.","Farsz: wędlinę obtaczamy w przyprawach. Dodajemy 25g sera, cebulę, papryczkę, pieczarkę, czosnek, oregano, sól. Mieszamy.","Na środku placka kładziemy pozostałe 25g sera, potem farsz i 2-3 łyżki sosu. Zawijamy jak wielkiego pieroga, sklejamy brzegi widelcem.","Pieczemy 28-30 minut w 200°C, aż się zarumieni. Kroimy przez środek. Podajemy z sosem pomidorowym."],
+ note:"Wege: farsz z większej ilości pieczarek i papryki. Ser zastąp wegańskim na bazie oleju kokosowego i skrobi.",
+ nutri:[{l:"całość",kcal:776,b:42,t:14,w:115},{l:"na porcję",kcal:388,b:21,t:7,w:58},{l:"w 100 g",kcal:194,b:11,t:3,w:29}]},
+
+{cat:"Fast food", name:"Frytki", portions:"1 duża lub 2 mniejsze porcje", time:"30 min",
+ ing:["ok. 750g ziemniaków (waga po obraniu)","Przyprawy: sól, papryka słodka, pieprz ziołowy, chili lub cayenne","1 łyżka oliwy z oliwek"],
+ steps:["Ziemniaki obieramy, kroimy w słupki ok. 1 cm, starannie osuszamy ręcznikami. Obtaczamy w przyprawach.","Rozkładamy na papierze do pieczenia, najlepiej żeby się nie stykały. Pieczemy w 200°C przez 25 minut.","Po upieczeniu mieszamy z oliwą. Doprawiamy do smaku."],
+ nutri:[{l:"całość",kcal:663,b:15,t:9,w:135},{l:"na porcję",kcal:331,b:8,t:5,w:68},{l:"w 100 g",kcal:133,b:3,t:2,w:27}]},
+
+{cat:"Fast food", name:"Hot Dogi", portions:"2 porcje", time:"20 min",
+ ing:["1 bagietka ok. 150g","100g piersi z kurczaka lub indyka","Przyprawy do mięsa: 1 łyżeczka papryki wędzonej, szczypta soli, pieprz, szczypta czosnku granulowanego","1 łyżeczka masła klarowanego (lub oliwa, olej roślinny)","Ziołowy sos pomidorowy lub ostry sos orientalny (przepisy w tym zbiorze)","Musztarda"],
+ steps:["Kurczaka kroimy w cienkie paski, obtaczamy w przyprawach. Grillujemy na suchej patelni na średnim ogniu, obracając po zarumienieniu. Uważać żeby nie przesuszyć.","Bagietkę kroimy na dwie bagiety, wydrążamy środek (łyżeczką lub widelcem). Opiekamy w mocno rozgrzanym piekarniku, aż będą chrupiące.","Mięso przekładamy do miski, dodajemy masło i obtaczamy.","Bułki napełniamy na zmianę sosem, musztardą i mięsem."],
+ note:"Wege: mięso zamień na tofu skrojone w słupki.",
+ nutri:[{l:"całość",kcal:407,b:36,t:10,w:41},{l:"na porcję",kcal:204,b:18,t:5,w:21}]},
+
+{cat:"Fast food", name:"Kebab", portions:"2 kebaby", time:"60 min (z wyrastaniem pity)",
+ ing:["1 domowa bułka pita, przekrojona na pół (przepis w tym zbiorze)","ok. 300g piersi z kurczaka lub indyka","Przyprawy do mięsa: po szczypcie papryki słodkiej, pieprzu ziołowego, chili lub cayenne, po małej szczypcie kminu rzymskiego, cynamonu, soli i czosnku granulowanego","1-1,5 łyżki oliwy z oliwek (lub olej rzepakowy, lniany, masło klarowane)","Warzywa: ogórek, pomidor, czerwona cebula, kapusta lub sałata","Sos majonezowy (przepis w tym zbiorze)"],
+ steps:["Pitę przygotowujemy wg przepisu w tym zbiorze.","Pierś w dużych kawałkach (100-150g) obtaczamy w przyprawach. Pieczemy ok. 25-30 minut w 180°C na folii. Alternatywnie małe kawałki (2cm) ok. 12-13 minut, ale mięso będzie mniej soczyste.","Po upieczeniu kroimy na małe kawałki, polewamy oliwą i obtaczamy.","Pity napełniamy mięsem i warzywami. Wstawiamy do mocno rozgrzanego piekarnika na parę minut. Dodajemy sos."],
+ note:"Wege: kurczaka zamień na tofu w plastrach, grillowane na suchej patelni do zarumienienia.",
+ nutri:[{l:"całość",kcal:968,b:84,t:14,w:114},{l:"na porcję",kcal:484,b:42,t:7,w:57},{l:"w 100 g",kcal:149,b:13,t:2,w:18}]},
+
+{cat:"Fast food", name:"Kurczak Chrupiący", portions:"2 porcje (ok. 300g)", time:"25 min",
+ ing:["ok. 200-250g piersi z kurczaka lub indyka","1 jajo kurze","ok. 50g panko (lub domowe, opis w notatce)","Opcjonalnie: 1-2 łyżki oliwy z oliwek (lub olej lniany, rzepakowy, masło klarowane)","Przyprawy: sól, pieprz, papryka ostra, chili lub cayenne"],
+ steps:["Kurczaka kroimy w cienkie paski, obtaczamy w przyprawach. Panko mieszamy z ½ łyżeczki chili i 1 łyżeczką papryki słodkiej.","Kawałki maczamy w rozbełtanym jajku, potem obtaczamy w panko. Układamy na papierze do pieczenia.","Pieczemy ok. 15 minut w 180°C, czas zależy od grubości. Na ostatnie minuty można poodwracać.","Polewamy ostrym sosem orientalnym, można dodać oliwę."],
+ note:"Domowe panko: wydrążone pieczywo (może bezglutenowe) bez skórek pokruszyć lub przemielić na małe kawałki i suszyć w 120-150°C do całkowitego wysuszenia, nie podpiekać. Wege: kurczaka zamień na tofu.",
+ nutri:[{l:"całość",kcal:622,b:64,t:17,w:42},{l:"na porcję",kcal:311,b:32,t:8,w:21},{l:"w 100 g",kcal:207,b:21,t:6,w:14}]},
+
+{cat:"Fast food", name:"Kurczak Słodko-Kwaśny", portions:"2 porcje", time:"25 min",
+ ing:["ok. 400-450g piersi z kurczaka lub indyka, w małych kawałkach","Warzywa: 1 marchewka, ½ zielonej papryki, ½ czerwonej papryki, 1 mała cebula lub szalotka","ok. 100-150g ananasa na kawałki (świeży lub z puszki)","1 ząbek czosnku i kawałek imbiru, starte","Opcjonalnie: pędy bambusa","3 łyżki oliwy lub rafinowanego oleju kokosowego do smażenia","Sos słodko-kwaśny: 2-3 łyżki passaty, 1-2 łyżki słodzika, 50-100ml soku z pomarańczy lub zblendowanego ananasa, papryka słodka i trochę chili, trochę sosu sojowego, 1 łyżeczka mąki ziemniaczanej"],
+ steps:["Marchewkę w paskach gotujemy kilka minut do miękkości (krócej dla chrupiącej). Odcedzamy.","Na woku lub patelni smażymy kurczaka na dużym ogniu, mieszając, aż zmieni kolor.","Dodajemy warzywa, imbir, czosnek, opcjonalnie bambus. Smażymy parę minut, aż warzywa się podsmażą. Uważać żeby nie przesuszyć mięsa.","Zmniejszamy ogień, dodajemy składniki sosu, mieszamy aż zgęstnieje. Ananasa dodajemy na końcu lub w trakcie. Podajemy z ryżem."],
+ note:"Wege: kurczaka zamień na tofu lub tempeh, albo zrób sam ryż z warzywami w sosie. Wartości z ryżem dotyczą ⅓ całości i 50g ryżu.",
+ nutri:[{l:"całość",kcal:770,b:94,t:31,w:20},{l:"na porcję",kcal:385,b:47,t:16,w:10},{l:"z ryżem",kcal:439,b:35,t:11,w:48}]},
+
+{cat:"Fast food", name:"Kurrito", portions:"2 porcje", time:"20 min",
+ ing:["1 tortilla (przepis w tym zbiorze)","ok. 75-100g piersi z kurczaka lub indyka","Przyprawy do mięsa (po szczypcie): sól, pieprz, papryka słodka, papryka wędzona, czosnek granulowany","50g dowolnego sera (mozzarella)","Sos BBQ: 2 łyżki passaty, 1 łyżeczka słodzika, ½ łyżeczki papryki wędzonej, pieprz, ½ łyżeczki ciemnego sosu sojowego"],
+ steps:["Tortillę przygotowujemy wg przepisu w tym zbiorze, wałkujemy możliwie cienko.","Kurczaka kroimy bardzo drobno. Składniki sosu mieszamy. Ser ścieramy w wiórki.","Patelnię wycieramy po tortilli. Na średnim ogniu grillujemy kurczaka na sucho, mieszając, aż się usmaży.","Mięso przekładamy do miski z sosem, mieszamy, dodajemy ser. Farsz kładziemy na tortillę i składamy na pół.","Pieczemy w 200°C do rozpuszczenia sera (lub na patelni pod przykryciem albo w mikrofali). Kroimy na części."],
+ note:"Wege: kurczaka zamień na tofu lub tempeh, ser na wegański na bazie oleju kokosowego i skrobi.",
+ nutri:[{l:"całość",kcal:507,b:36,t:13,w:58},{l:"na porcję",kcal:254,b:18,t:6,w:29},{l:"w 100 g",kcal:184,b:13,t:5,w:21}]},
+
+{cat:"Fast food", name:"Nuggetsy", portions:"3 małe lub 2 duże porcje", time:"25 min",
+ ing:["ok. 450g piersi z kurczaka lub indyka","50-60g bułki tartej lub mąki (może razowa, w wersji bezglutenowej ryżowa, kukurydziana, amarantusowa)","1 jajo kurze (L)","Przyprawy do mięsa: chili lub cayenne, szczypta soli i pieprzu, papryka słodka, czosnek granulowany, pieprz ziołowy (w sumie ok. 3 łyżki)","Kilka łyżek oliwy lub oleju kokosowego do smażenia"],
+ steps:["Kurczaka kroimy na kawałki o długości kilku cm, podobnej wielkości. Obtaczamy w przyprawach.","Jajo rozbełtujemy. Kawałki maczamy w jajku, potem obtaczamy w mące lub bułce tartej.","Smażymy na rozgrzanym tłuszczu na średnim ogniu ze wszystkich stron do zarumienienia. Próbujemy w trakcie, żeby nie przesuszyć. Podajemy z sosem orientalnym lub pomidorowym."],
+ note:"Wege: kurczaka zamień na tofu.",
+ nutri:[{l:"całość",kcal:1024,b:119,t:38,w:43},{l:"na porcję",kcal:341,b:40,t:13,w:14},{l:"w 100 g",kcal:186,b:22,t:7,w:8}]},
+
+{cat:"Fast food", name:"Pikantny Chickenburger", portions:"1 porcja", time:"20 min",
+ ing:["1 bułka ok. 60-75g (może domowa, przepis w tym zbiorze)","1 kotlet drobiowy w panierce (poniżej)","1-2 liście sałaty rzymskiej","Sos majonezowy (przepis w tym zbiorze)","Kotlet: ok. 75g piersi z kurczaka lub indyka (płaski kawałek), 1 łyżeczka cayenne lub chili, szczypta soli i pieprzu, 1 małe jajo, 1-2 łyżki bułki tartej lub panko lub mąki, 1-2 łyżeczki oliwy lub oleju kokosowego do smażenia"],
+ steps:["Płaski kawałek mięsa obtaczamy w przyprawach, maczamy w jajku, obtaczamy w mące lub bułce tartej.","Smażymy na rozgrzanym tłuszczu z dwóch stron na średnim ogniu, aż się zarumieni.","Bułkę kroimy na pół, podpiekamy w piekarniku, potem grillujemy od środka na suchej patelni do chrupkości.","Bułkę smarujemy sosem z dwóch stron, dodajemy sałatę, kotlet i sos majonezowy."],
+ note:"Wersja bez smażenia: kotlet jak chrupiące stripsy pieczone w panierce (patrz Kurczak Chrupiący). Wege: zamiast mięsa płaski plaster tofu zmoczony w mleku roślinnym, obtoczony w cayenne i zblendowanych płatkach lub panko, smażony z dwóch stron.",
+ nutri:[{l:"całość",kcal:402,b:30,t:12,w:41},{l:"w 100 g",kcal:230,b:17,t:7,w:23}]},
+
+{cat:"Fast food", name:"Pizza Hawajska", portions:"4 porcje (ok. 300-350g)", time:"30 min",
+ ing:["Ciasto: 75g mąki typ 500-720 (lub bezglutenowa), ok. 50ml ciepłej wody, szczypta soli","30g chudej wędliny drobiowej (lub pieczony kurczak, indyk w plastrach)","ok. 75g sera żółtego w plastrach lub wiórkach (mozzarella)","Kilka cienkich plastrów cebuli","½ ostrej papryczki, drobno","ok. 75-100g cienko skrojonego ananasa","2-3 łyżki ziołowego sosu pomidorowego (przepis w tym zbiorze)","Przyprawy: sól, pieprz z młynka, oregano","Opcjonalnie: listki oregano lub zielenina"],
+ steps:["Spód: mąkę mieszamy z solą i ciepłą wodą, zagniatamy łyżką, potem w dłoniach. Rozwałkowujemy na cienki placek.","Smażymy na suchej, mocno rozgrzanej patelni z dwóch stron, aż miejscami się zrumieni. Piekarnik rozgrzewamy do maksimum (240°C).","Na placek dajemy 50g sera i cebulę, sól, pieprz, oregano. Zapiekamy do rozpuszczenia sera.","Dodajemy wędlinę, ananasa, papryczkę. Pieczemy 3-4 minuty.","Rozprowadzamy sos pomidorowy, sypiemy pozostały ser, opcjonalnie jeszcze ananas. Zapiekamy do rozpuszczenia sera.","Posypujemy pieprzem i oregano, dekorujemy. Brzegi można posmarować oliwą."],
+ note:"Wege: użyj wege wędliny. Ser zastąp wegańskim na bazie oleju kokosowego i skrobi.",
+ nutri:[{l:"całość",kcal:573,b:32,t:18,w:69},{l:"na porcję",kcal:164,b:9,t:5,w:20},{l:"w 100 g",kcal:143,b:8,t:4,w:17}]},
+
+{cat:"Fast food", name:"Pizza z Patelni", portions:"4 porcje (1 mała pizza)", time:"25 min",
+ ing:["Spód: 15g płatków błyskawicznych (owsiane, żytnie, orkiszowe, gryczane, jaglane, z komosy), 1 łyżeczka mąki ziemniaczanej lub tapioki, 1 duże jajo (L), szczypta soli","ok. 80-100g żółtego sera (mozzarella)","30-35g chudej wędliny drobiowej (lub pieczony kurczak, indyk w plastrach)","Kilka plastrów pomidora","Mały kawałek cebuli","Ziołowy sos pomidorowy (przepis w tym zbiorze)","1 pieczarka, pokrojona i podsmażona","Opcjonalnie: oregano lub bazylia"],
+ steps:["Spód: składniki blendujemy do ujednolicenia. Przelewamy na rozgrzaną (nie mocno) patelnię i smażymy bez tłuszczu z dwóch stron. Odwracamy, gdy brzegi zaczną odchodzić.","Piekarnik rozgrzewamy do maksimum (240°C). Placek na blaszkę, dajemy część sera i cebulę, sól, pieprz, oregano. Zapiekamy do rozpuszczenia sera.","Rozkładamy wędlinę, pieczarkę, pomidory. Pieczemy 2-3 minuty.","Rozprowadzamy 2 łyżki sosu, sypiemy resztę sera, zapiekamy do rozpuszczenia. Posypujemy oregano i pieprzem."],
+ note:"Wersja bezmięsna z mozzarellą, cebulą, kozim serem (15-20g, z drugą warstwą sera) i bazylią. Pomidory lekko odcisnąć z wody. Wege: spód jak tortilla, wege wędlina, ser wegański.",
+ nutri:[{l:"całość",kcal:425,b:34,t:24,w:16},{l:"na porcję",kcal:106,b:9,t:6,w:4},{l:"w 100 g",kcal:212,b:17,t:12,w:8}]},
+
+{cat:"Fast food", name:"Podwójny Wółper", portions:"1 burger", time:"20 min",
+ ing:["1 bułka ok. 60-75g (może domowa, przepis w tym zbiorze)","200g mielonej wołowiny (po 100g na kotlet)","Sos majonezowy (przepis w tym zbiorze)","20-30g żółtego sera (2 plastry, można pominąć)","Warzywa: cebula, pomidor, sałata","Odrobina oleju kokosowego lub oliwy do smażenia"],
+ steps:["Mięso dzielimy na dwie części, formujemy kulki.","Dwie patelnie lekko natłuszczamy i mocno rozgrzewamy. Kulki kładziemy na gorący tłuszcz i od razu maksymalnie spłaszczamy, mocno dociskając (np. natłuszczonym od spodu garnkiem), tworząc płaski kotlet. Uważać żeby się nie oparzyć.","Przewracamy, gdy brzegi zmienią kolor, a spód jest ciemnobrązowy. Na kotletach kładziemy ser, smażymy krócej do rozpuszczenia.","Bułkę kroimy na pół, podpiekamy lub grillujemy od środka na suchej patelni. Smarujemy sosem majonezowym, dodajemy kotlety i warzywa."],
+ note:"Wartości z jednym kotletem i jednym plastrem sera: 436 kcal, B 30, T 20, W 39.",
+ nutri:[{l:"całość",kcal:682,b:55,t:39,w:39},{l:"w 100 g",kcal:227,b:18,t:13,w:13}]},
+
+{cat:"Fast food", name:"Shawarma", portions:"2 małe porcje", time:"40 min",
+ ing:["1 tortilla (przepis w tym zbiorze)","200g piersi z kurczaka lub indyka w dużych kawałkach","Przyprawy: szczypta soli i pieprz z młynka, szczypta mielonej kolendry, po 2 szczypty papryki wędzonej, kminu rzymskiego, czosnku granulowanego, chili lub cayenne","Cytryna lub limonka","Mały kawałek cebuli, drobno","Kawałek zielonej papryki, drobno","1 łyżka oliwy z oliwek (lub olej lniany, rzepakowy, masło klarowane)","Sos majonezowy lub czosnkowo-chrzanowy (przepisy w tym zbiorze)"],
+ steps:["Pierś obtaczamy w przyprawach wymieszanych z odrobiną soku z cytryny. Pieczemy na folii 30 minut w piekarniku.","Upieczone mięso kroimy na drobne skrawki. Mieszamy z warzywami, łyżką oliwy i sokiem z cytryny.","Tortillę rozkładamy na folii, smarujemy sosem, na środku farsz. Zwijamy, owijamy folią, zawijamy brzegi. Kroimy na dwie porcje."],
+ note:"Wege: kurczaka zamień na tofu i pieczarki pół na pół, obtoczone w przyprawach i grillowane na suchej patelni.",
+ nutri:[{l:"całość",kcal:602,b:55,t:13,w:58},{l:"na porcję",kcal:301,b:27,t:7,w:29},{l:"w 100 g",kcal:150,b:14,t:3,w:15}]},
+
+{cat:"Fast food", name:"Tortilla", portions:"1 sztuka", time:"15 min",
+ ing:["75g mąki pszennej lub żytniej typ 500-720 (lub bezglutenowa mieszanka)","50ml ciepłej wody","Szczypta soli"],
+ steps:["Mąkę mieszamy z solą i ciepłą wodą. Zagniatamy łyżką, potem w dłoniach 1-2 minuty, aż będzie plastyczna. W razie potrzeby podsypujemy mąką.","Formujemy kulę, posypujemy blat mąką, wałkujemy na cienki placek pasujący na patelnię o średnicy dna 20-23 cm. Można podzielić na 2-3 mniejsze tortille.","Smażymy na mocno rozgrzanej patelni na średnio-dużym ogniu z dwóch stron, aż miejscami się zarumieni i pojawią pęcherzyki. Obracamy 2-3 razy, dociskając łopatką w słabiej dosmażonych miejscach."],
+ note:"Baza do burrito, kurrito, shawarmy i wrapów.",
+ nutri:[{l:"całość",kcal:275,b:8,t:1,w:57},{l:"w 100 g",kcal:275,b:8,t:1,w:57}]},
+
+{cat:"Fast food", name:"Wegeburger", portions:"1 burger", time:"25 min",
+ ing:["1 bułka ok. 75g (może domowa, przepis w tym zbiorze)","1 kotlet wegański (poniżej)","1 łyżka ostrego sosu orientalnego (przepis w tym zbiorze)","1 łyżka sosu majonezowego (przepis w tym zbiorze)","Warzywa: ogórek, pomidor, czerwona cebula, sałata","Kotlety (na 5 szt.): 1 puszka fasoli (240g bez zalewy), przyprawy (2 łyżeczki papryki wędzonej, 1 łyżeczka papryki słodkiej lub chili, ½ łyżeczki pieprzu ziołowego, 1 łyżeczka tymianku, sól i pieprz), 1 łyżka siemienia lnianego, 3-4 łyżki bułki tartej lub przemielonych płatków, olej kokosowy lub oliwa do smażenia"],
+ steps:["Siemię zalewamy wrzątkiem, odstawiamy. Fasolę odsączamy na sitku, nie przelewamy wodą.","Siemię blendujemy z fasolą. Dodajemy przyprawy i bułkę tartą, mieszamy i formujemy płaskie kotlety.","Smażymy na patelni bez tłuszczu z dwóch stron po parę minut do zarumienienia. Studzimy.","Opcjonalnie przed podaniem obsmażamy kotlet jeszcze raz na oliwie z drobno skrojoną cebulą i czosnkiem.","Bułkę składamy z kotletem, sosami i warzywami."],
+ note:"Przepis wegański. Wartości: burger 298 kcal; sam kotlet bez tłuszczu do smażenia 70 kcal.",
+ nutri:[{l:"burger",kcal:298,b:8,t:7,w:51},{l:"kotlet",kcal:70,b:3,t:1,w:13}]},
+
+{cat:"Fast food", name:"Wrap Twister", portions:"2 małe porcje", time:"25 min",
+ ing:["1 tortilla (przepis w tym zbiorze)","ok. 125g nuggetsów (przepis w tym zbiorze) lub 125g piersi z kurczaka, indyka bez panierki","Warzywa: kilka liści sałaty, ½ pomidora w kawałkach","2-3 łyżki sosu majonezowego (przepis w tym zbiorze)","1 łyżeczka oliwy z oliwek (lub olej lniany, rzepakowy, masło klarowane)","Szczypta oregano i czosnku granulowanego"],
+ steps:["Nuggetsy i tortillę przygotowujemy wg przepisów. Bez panierki: pierś w kawałkach obtaczamy w przyprawach (papryka słodka, pieprz ziołowy, sól, czosnek) i grillujemy na suchej patelni.","Tortillę na folii smarujemy oliwą pędzlem, posypujemy czosnkiem i oregano. Na środku sałata, nuggetsy lub kurczak, sos majonezowy, pomidor.","Zwijamy tortillę, owijamy folią, zawijamy brzegi. Kroimy przez środek na dwie porcje."],
+ note:"Wartości na porcję: wersja z grillowanym kurczakiem 229 kcal, wersja z nuggetsami 301 kcal.",
+ nutri:[{l:"całość",kcal:603,b:44,t:15,w:68},{l:"z kurczakiem",kcal:229,b:18,t:3,w:29},{l:"z nuggetsami",kcal:301,b:22,t:8,w:34}]},
+
+{cat:"Fast food", name:"Zapiekanki", portions:"4 porcje", time:"30 min",
+ ing:["1 bagietka ok. 150g","150g piersi z kurczaka lub indyka","3-4 spore pieczarki","Mały kawałek cebuli lub 1 szalotka","ok. ½ czerwonej papryki","2 łyżki oliwy lub rafinowanego oleju kokosowego do smażenia","50g sera żółtego (mozzarella)","Ostry sos orientalny (przepis w tym zbiorze)","Przyprawy: papryka wędzona (koniecznie), papryka słodka lub chili, pieprz, sól, czosnek granulowany (ok. 2 łyżki)","Opcjonalnie: ostra papryczka, listki oregano lub bazylii"],
+ steps:["Bagietkę kroimy na dwie bagiety, każdą przez środek, dając cztery bułki. Wydrążamy środek.","Pieczarki szatkujemy drobno, kurczaka kroimy bardzo drobno, warzywa na małe kawałki.","Smażymy kurczaka i pieczarki na średnim ogniu, dodając 2 łyżki przypraw. Gdy zmienią kolor, dodajemy warzywa, smażymy do usmażenia mięsa. Po wyłączeniu dodajemy 3 łyżeczki sosu i mieszamy.","Piekarnik rozgrzewamy do maksimum (240°C), podpiekamy bułki do chrupkości.","Farsz do bułek, posypujemy mozzarellą, zapiekamy do rozpuszczenia sera. Polewamy sosem, dekorujemy oregano."],
+ note:"Wege: kurczaka pomiń (same pieczarki) lub zamień na ugotowaną kaszę gryczaną z warzywami.",
+ nutri:[{l:"całość",kcal:773,b:60,t:36,w:47},{l:"na porcję",kcal:193,b:15,t:9,w:12},{l:"w 100 g",kcal:155,b:12,t:7,w:9}]},
+
+{cat:"Fast food", name:"Sos: Ostry Orientalny", portions:"do polania", time:"szybko",
+ ing:["200ml wody","1 łyżeczka ostrej pasty na bazie chili (np. sambal oelek, harissa)","Kilka łyżek erytrytolu lub ksylitolu (lub miód, syrop)","½ łyżeczki papryki słodkiej","1 łyżeczka mąki ziemniaczanej lub tapioki"],
+ steps:["Składniki wkładamy do garnka. Podgrzewamy na dużym ogniu, mieszając do zagotowania, aż sos zgęstnieje. Doprawiamy do smaku."],
+ nutri:[]},
+
+{cat:"Fast food", name:"Sos: Ziołowy Pomidorowy", portions:"do polania", time:"szybko",
+ ing:["Kilka łyżek passaty pomidorowej","1 łyżka erytrytolu lub ksylitolu (lub 1 łyżeczka miodu)","Suszone oregano, wedle uznania","1 łyżeczka czosnku granulowanego","1 łyżeczka słodkiej papryki mielonej","Szczypta pieprzu"],
+ steps:["Składniki mieszamy w misce, próbujemy. W razie potrzeby dodajemy więcej ziół lub słodzika."],
+ nutri:[]},
+
+{cat:"Fast food", name:"Sos: Majonezowy", portions:"do polania", time:"szybko",
+ ing:["Kilka łyżek jogurtu naturalnego lub roślinnego","1 łyżka erytrytolu lub ksylitolu (lub 1 łyżeczka miodu)","½ łyżeczki musztardy na każde 2-3 łyżki jogurtu","Szczypta drobno zmielonego pieprzu"],
+ steps:["Składniki mieszamy w misce do ujednolicenia."],
+ nutri:[]},
+
+{cat:"Fast food", name:"Sos: Czosnkowo-Chrzanowy", portions:"do polania", time:"szybko",
+ ing:["Kilka łyżek jogurtu naturalnego lub roślinnego","½ łyżeczki chrzanu na każde 2-3 łyżki jogurtu","1 mały ząbek czosnku starty lub wyciśnięty (lub szczypta granulowanego)","Szczypta mielonego pieprzu"],
+ steps:["Składniki mieszamy w misce do ujednolicenia."],
+ nutri:[]}
+];
+
+const CATS = ["Wszystkie","Śniadania","Drugie śniadania","Obiady","Fast food","Dodatki słodkie","Dodatki wytrawne","Szybkie surówki","Napoje"];
+let activeCat = "Wszystkie";
+let query = "";
+
+const grid = document.getElementById('grid');
+const tabsEl = document.getElementById('tabs');
+const countEl = document.getElementById('count');
+const emptyEl = document.getElementById('empty');
+
+CATS.forEach(c=>{
+  const b=document.createElement('button');
+  b.className='tab'+(c==='Wszystkie'?' active':'');
+  b.textContent=c;
+  b.onclick=()=>{activeCat=c;[...tabsEl.children].forEach(x=>x.classList.remove('active'));b.classList.add('active');render();};
+  tabsEl.appendChild(b);
+});
+
+function macroChips(n){
+  if(!n||!n.length) return '';
+  const f=n[0];
+  return `<span class="macro">B <b>${f.b}</b></span><span class="macro">T <b>${f.t}</b></span><span class="macro">W <b>${f.w}</b></span>`;
+}
+
+function render(){
+  const q=query.trim().toLowerCase();
+  const list=RECIPES.filter(r=>{
+    if(activeCat!=='Wszystkie' && r.cat!==activeCat) return false;
+    if(!q) return true;
+    if(r.name.toLowerCase().includes(q)) return true;
+    return r.ing.some(i=>i.toLowerCase().includes(q));
   });
-  el("importBtn").addEventListener("click",function(){el("importFile").click();});
-  el("importFile").addEventListener("change",function(e){
-    var file=e.target.files[0];if(!file)return;
-    var reader=new FileReader();
-    reader.onload=function(){
-      try{
-        var data=JSON.parse(reader.result);
-        var incoming = Array.isArray(data) ? data : (data.recipes||[]);
-        if(!Array.isArray(incoming))throw 0;
-        if(recipes.length && !confirm("Dołączyć "+incoming.length+" przepisów do obecnych? (Anuluj = zastąp wszystko)")){
-          recipes=incoming;
-        }else{
-          var ids={};recipes.forEach(function(r){ids[r.id]=true;});
-          incoming.forEach(function(r){if(!r.id||ids[r.id])r.id=uid();ids[r.id]=true;recipes.push(r);});
-        }
-        if(data.plans && typeof data.plans==="object"){Object.keys(data.plans).forEach(function(k){plans[k]=data.plans[k];});}
-        cacheLocal();renderRecipes();renderPlan();pushCloud(true);
-        alert("Zaimportowano dane.");
-      }catch(err){alert("Nie udało się wczytać pliku. Upewnij się, że to plik z przepisami.");}
-      e.target.value="";
-    };
-    reader.readAsText(file);
+  grid.innerHTML='';
+  list.forEach((r,idx)=>{
+    const i=RECIPES.indexOf(r);
+    const card=document.createElement('div');
+    card.className='card';
+    const kcal = r.nutri && r.nutri.length ? `<span class="kcal">${r.nutri[0].kcal} kcal</span>` : '<span class="kcal" style="color:var(--muted)">&mdash;</span>';
+    card.innerHTML=`
+      <span class="cat">${r.cat}</span>
+      <h3>${r.name}</h3>
+      <div class="macros">${macroChips(r.nutri)}</div>
+      <div class="meta">
+        ${kcal}
+        <span class="time">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          ${r.time}
+        </span>
+      </div>`;
+    card.onclick=()=>openModal(i);
+    grid.appendChild(card);
   });
+  emptyEl.style.display=list.length?'none':'block';
+  countEl.textContent=`${list.length} ${list.length===1?'przepis':(list.length%10>=2&&list.length%10<=4&&!(list.length>=12&&list.length<=14))?'przepisy':'przepisów'}`;
+}
 
-  /* ---------- start ---------- */
-  dayInput.value=currentDate;
-  renderRecipes();renderPlan();setSync(cloudOn?"syncing":"off");
-  if(cloudOn){
-    pullCloud(true);
-    window.addEventListener("focus",function(){pullCloud(false);});
-  }
-})();
+const overlay=document.getElementById('overlay');
+const modal=document.getElementById('modal');
+
+function nutriTable(n){
+  if(!n||!n.length) return '';
+  const rows=n.map(x=>`<tr><td>${x.l}</td><td class="kc">${x.kcal}</td><td>${x.b}</td><td>${x.t}</td><td>${x.w}</td></tr>`).join('');
+  return `<div class="nutri"><table>
+    <thead><tr><th style="text-align:left">Wartość</th><th>kcal</th><th>B</th><th>T</th><th>W</th></tr></thead>
+    <tbody>${rows}</tbody></table></div>`;
+}
+
+function openModal(i){
+  const r=RECIPES[i];
+  modal.innerHTML=`
+    <div class="modal-head">
+      <button class="close" onclick="closeModal()" aria-label="Zamknij">&times;</button>
+      <span class="cat">${r.cat}</span>
+      <h2>${r.name}</h2>
+      <span class="sub">${r.portions} &middot; ${r.time}</span>
+    </div>
+    <div class="modal-body">
+      <h4>Składniki</h4>
+      <ul>${r.ing.map(x=>`<li>${x}</li>`).join('')}</ul>
+      <h4>Przygotowanie</h4>
+      <ol>${r.steps.map(x=>`<li>${x}</li>`).join('')}</ol>
+      ${r.note?`<p class="note">${r.note}</p>`:''}
+      ${nutriTable(r.nutri)}
+    </div>`;
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+  modal.querySelector('.modal-body').scrollTop=0;
+}
+function closeModal(){overlay.classList.remove('open');document.body.style.overflow='';}
+overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+document.getElementById('search').addEventListener('input',e=>{query=e.target.value;render();});
+
+render();
 </script>
 </body>
 </html>
